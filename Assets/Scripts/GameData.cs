@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class GameData : MonoBehaviour 
@@ -26,6 +27,8 @@ public class GameData : MonoBehaviour
 	private GameObject playerRef;
     [SerializeField]
 	private SoundManager soundManager;
+    [SerializeField]
+    private Text tempTextDisplay;                       // Remove this once testing flower count is complete
 
 	public static GameData Instance {get; private set;}
 
@@ -66,6 +69,9 @@ public class GameData : MonoBehaviour
 		flowersCollected += count;
 		lifetimeFlowersCollected += count;
 
+        // TODO: remove later, this is temporary
+        tempTextDisplay.text = "Flowers: " + flowersCollected.ToString();
+
 		// Instantiate an InfoText GameObject, indicating flower gain.
 		// Display above player position.
 		//Vector3 playerPos = playerRef.transform.position;
@@ -73,7 +79,7 @@ public class GameData : MonoBehaviour
 		//iText.GetComponent<TextMeshDisplay>().SetText("+ " + count + " Flower");
 		
 		// Play a sound when gaining flowers.
-		soundManager.PlayRandomNote();
+		//soundManager.PlayRandomNote();
 	}
 
 

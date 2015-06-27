@@ -36,7 +36,7 @@ public class GameGrid : MonoBehaviour
 
 	// Attempts to return object at coordinates.
 	// If not found, returns null.
-	public GameObject GetObject(GameGridCoords coords)
+	public GameObject GetObjectAt(GameGridCoords coords)
 	{
         GameObject value;
 		if(tiles.TryGetValue(coords, out value))

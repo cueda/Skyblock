@@ -17,8 +17,15 @@ public class PlayerActionItem : MonoBehaviour
         playerGridPosition = GetComponent<PlayerGridPosition>();
     }
 
+    /// <summary>
+    /// Uses the current item.
+    /// Dirt and Shovel are handled in Targeter.
+    /// All other items are currently placed onto player location, provided there is a suitable block beneath.
+    /// </summary>
     public void UseCurrentItem()
     {
+        GameGridCoords currentPosition = playerGridPosition.GetPosition();
+
         switch (GameData.Instance.currentItem)
         {
             case EntityType.DIRT:
@@ -28,73 +35,47 @@ public class PlayerActionItem : MonoBehaviour
                 EventManager.Game.OnStateSet(GameState.State.TARGET);
                 break;
             case EntityType.FLOWER1:
-                if (!GameGrid.Instance.IsCoordinatesOccupied(playerGridPosition.GetPosition()))
+                if (IsObjectPlaceableAt(currentPosition))
                 {
-                    Debug.Log("Plant a flower here!");
+                    ObjectReferences.spawner.SpawnFlower(currentPosition);
                 }
                 break;
             case EntityType.KITTEN:
-                if (!GameGrid.Instance.IsCoordinatesOccupied(playerGridPosition.GetPosition()))
+                if (IsObjectPlaceableAt(currentPosition) && GameData.Instance.kittensCollected > 0)
                 {
-                    Debug.Log("Plant a kitten here!");
+                    ObjectReferences.spawner.SpawnKitten(currentPosition);
+                    GameData.Instance.kittensCollected--;
                 }
                 break;
             case EntityType.VASE:
-                if (!GameGrid.Instance.IsCoordinatesOccupied(playerGridPosition.GetPosition()))
+                if (IsObjectPlaceableAt(currentPosition) && GameData.Instance.vasesCollected > 0)
                 {
-                    Debug.Log("Plant a vase here!");
+                    ObjectReferences.spawner.SpawnVase(currentPosition);
+                    GameData.Instance.vasesCollected--;
                 }
                 break;
-            case EntityType.COMPUTER:
-                if (!GameGrid.Instance.IsCoordinatesOccupied(playerGridPosition.GetPosition()))
+            case EntityType.UPGRADER:
+                if (IsObjectPlaceableAt(currentPosition) && GameData.Instance.upgraderCollected > 0)
                 {
-                    Debug.Log("Plant a computer here!");
+                    ObjectReferences.spawner.SpawnUpgrader(currentPosition);
+                    GameData.Instance.upgraderCollected--;
                 }
                 break;
             default:
                 break;
         }
+    }
 
-        // TODO: Adapt this to non-targeting system, taken from Targeter
-        // ========================================================================================================================
-        // For all blocks requiring a floor, check for object in space below.
-        //else if (GameGrid.Instance.IsCoordinatesOccupied(currentGridPosition + new GameGridCoords(-Vector2.up*2)))
-        //{
-        //    // Check that this space is a dirt/grass block.
-        //    string selectedObjTag = GameGrid.Instance.GetObject(currentGridPosition + new GameGridCoords(-Vector2.up * 2)).tag;
-        //    if(selectedObjTag.Equals("GroundDirt") || selectedObjTag.Equals("GroundGrass"))
-        //    {
-        //        // If selected item is flower
-        //        if(GameData.Instance.currentItem.Equals ("flower"))
-        //        {
-        //            // Spawn a flower at targeted location.
-        //            spawner.SpawnFlower(currentGridPosition);
-        //        }
-
-        //        // If selected item is vase
-        //        if(GameData.Instance.currentItem.Equals ("vase") && GameData.Instance.vasesCollected > 0)
-        //        {
-        //            // Spawn a vase at targeted location and consume one vase resource.
-        //            spawner.SpawnVase(currentGridPosition);
-        //            GameData.Instance.vasesCollected--;
-        //        }
-
-        //        // If selected item is kitten
-        //        if(GameData.Instance.currentItem.Equals ("kitten") && GameData.Instance.kittensCollected > 0)
-        //        {
-        //            // Spawn a kitten at targeted location and consume one kitten resource.
-        //            spawner.SpawnKitten(currentGridPosition);
-        //            GameData.Instance.kittensCollected--;
-        //        }
-
-        //        // If selected item is upgrader
-        //        if(GameData.Instance.currentItem.Equals ("upgrader") && GameData.Instance.upgraderCollected > 0)
-        //        {
-        //            // Spawn an upgrader at targeted location and consume one upgrader resource.
-        //            spawner.SpawnUpgrader(currentGridPosition);
-        //            GameData.Instance.upgraderCollected--;
-        //        }
-        //    }
-        //}
+    private bool IsObjectPlaceableAt(GameGridCoords coords)
+    {
+        GameGridCoords downOne = new GameGridCoords(0,-1);
+        if (!GameGrid.Instance.IsCoordinatesOccupied(coords))
+        {
+            if (GameGrid.Instance.GetObjectAt(coords + downOne).tag.Equals("GroundDirt") || GameGrid.Instance.GetObjectAt(coords + downOne).tag.Equals("GroundGrass"))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -9,7 +9,7 @@ using System.Collections;
 public class PlayerGridPosition : MonoBehaviour 
 {
     [SerializeField]
-    private float playerCenter = 4f;
+    private float playerCenter = 1f;
 
     private GameGridCoords gridPosition;
 

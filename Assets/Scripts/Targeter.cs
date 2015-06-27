@@ -4,8 +4,6 @@ using System.Collections;
 public class Targeter : MonoBehaviour 
 {
     [SerializeField]
-	private Spawner spawner;
-    [SerializeField]
     private PlayerGridPosition playerPosition;
     [SerializeField]
     private float rangeLimit = 3;
@@ -148,7 +146,6 @@ public class Targeter : MonoBehaviour
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-            Debug.Log(ray);
             if (Physics.Raycast(ray, out hit))
             {
                 return new GameGridCoords(hit.point);
@@ -165,6 +162,7 @@ public class Targeter : MonoBehaviour
 
     // Perform an action at the given location.
     // Action performed is based on current targeted location and current item selected.
+    // TODO: Consider moving this to its own TargetAction class.
     private void PerformActionAtLocation()
     {
         GameGridCoords currentGridPosition = new GameGridCoords(transform.position);
@@ -178,18 +176,18 @@ public class Targeter : MonoBehaviour
                     if (GameData.Instance.dirtCollected > 0)
                     {
                         // Add dirt block and use one dirt resource.
-                        spawner.SpawnDirtBlock(currentGridPosition);
+                        ObjectReferences.spawner.SpawnDirtBlock(currentGridPosition);
                         GameData.Instance.dirtCollected--;
                     }
                 }
                 break;
             case EntityType.SHOVEL:
-                GameObject objectAtTarget = GameGrid.Instance.GetObject(currentGridPosition);
+                GameObject objectAtTarget = GameGrid.Instance.GetObjectAt(currentGridPosition);
                 if (objectAtTarget != null)
                 {
                     if (objectAtTarget.tag == "GroundDirt" || objectAtTarget.tag == "GroundGrass")
                     {
-                        spawner.RemoveObject(objectAtTarget);
+                        ObjectReferences.spawner.RemoveObject(objectAtTarget);
                         GameData.Instance.dirtCollected++;
                     }
                 }

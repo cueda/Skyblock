@@ -12,5 +12,5 @@ public enum EntityType
     FLOWER3,
     KITTEN,
     VASE,
-    COMPUTER,
+    UPGRADER,
 }

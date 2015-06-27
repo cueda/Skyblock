@@ -53,6 +53,7 @@
      <Compile Include="Assets\Scripts\EntityType.cs" />
      <Compile Include="Assets\Scripts\EventManager.cs" />
      <Compile Include="Assets\Scripts\EvolveIntoGrass.cs" />
+     <Compile Include="Assets\Scripts\FlowerEntity.cs" />
      <Compile Include="Assets\Scripts\GameData.cs" />
      <Compile Include="Assets\Scripts\GameGrid.cs" />
      <Compile Include="Assets\Scripts\GameGridCoords.cs" />
@@ -75,6 +76,7 @@
      <Compile Include="Assets\Scripts\Test\TestInput.cs" />
      <Compile Include="Assets\Scripts\Test\TestTargeterButton.cs" />
      <Compile Include="Assets\Scripts\TouchScreenInputHandler.cs" />
+     <Compile Include="Assets\TestFlowerDisplay.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>D:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

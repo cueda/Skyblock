@@ -66,6 +66,7 @@
     <Compile Include="Assets\Scripts\EntityType.cs" />
     <Compile Include="Assets\Scripts\EventManager.cs" />
     <Compile Include="Assets\Scripts\EvolveIntoGrass.cs" />
+    <Compile Include="Assets\Scripts\FlowerEntity.cs" />
     <Compile Include="Assets\Scripts\GameData.cs" />
     <Compile Include="Assets\Scripts\GameGrid.cs" />
     <Compile Include="Assets\Scripts\GameGridCoords.cs" />
@@ -88,6 +89,7 @@
     <Compile Include="Assets\Scripts\Test\TestInput.cs" />
     <Compile Include="Assets\Scripts\Test\TestTargeterButton.cs" />
     <Compile Include="Assets\Scripts\TouchScreenInputHandler.cs" />
+    <Compile Include="Assets\TestFlowerDisplay.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2013\UnityVS.CSharp.targets" />
 </Project>
