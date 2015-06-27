@@ -22,7 +22,9 @@ public class GameData : MonoBehaviour
 	private int flowersRequiredForDirt = 5;			    // Flowers required to perform a Wish
 	private int flowersRequiredForKitten = 20;		    // Flowers required to buy a Kitten
 
+    [SerializeField]
 	private GameObject playerRef;
+    [SerializeField]
 	private SoundManager soundManager;
 
 	public static GameData Instance {get; private set;}
@@ -36,9 +38,6 @@ public class GameData : MonoBehaviour
 		}
 		
 		Instance = this;
-
-		playerRef = GameObject.Find("Player");
-		soundManager = GameObject.Find("SoundPlayer").GetComponent<SoundManager>();
 	}
 
     

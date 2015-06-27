@@ -6,10 +6,11 @@ public enum EntityType
 {
     DIRT,
     GRASS,
+    SHOVEL,
     FLOWER1,
     FLOWER2,
     FLOWER3,
     KITTEN,
     VASE,
-    COMPUTER
+    COMPUTER,
 }

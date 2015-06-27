@@ -95,7 +95,7 @@ public class PlayerMove : MonoBehaviour
 
 
 		// we can only jump whilst grounded
-        if (_controller.isGrounded && AgnosticInputHandler.IsJumpHeld && GameState.IsCurrentState(GameState.State.MOVE))
+        if (_controller.isGrounded && AgnosticInputHandler.IsJumpPressed && GameState.IsCurrentState(GameState.State.MOVE))
 		{
 			_velocity.y = Mathf.Sqrt( 2f * jumpHeight * -gravity );
 			//_animator.Play( Animator.StringToHash( "Jump" ) );

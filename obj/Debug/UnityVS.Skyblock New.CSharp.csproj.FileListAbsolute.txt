@@ -1,0 +1,13 @@
+D:\My Documents\Unity Projects\Unity 5.0.1f1\Skyblock New\Temp\UnityVS_bin\Debug\Assembly-CSharp.dll
+D:\My Documents\Unity Projects\Unity 5.0.1f1\Skyblock New\Temp\UnityVS_bin\Debug\Assembly-CSharp.pdb
+D:\My Documents\Unity Projects\Unity 5.0.1f1\Skyblock New\Temp\UnityVS_bin\Debug\UnityEditor.dll
+D:\My Documents\Unity Projects\Unity 5.0.1f1\Skyblock New\Temp\UnityVS_bin\Debug\UnityEditor.iOS.Extensions.Xcode.dll
+D:\My Documents\Unity Projects\Unity 5.0.1f1\Skyblock New\Temp\UnityVS_bin\Debug\UnityEngine.dll
+D:\My Documents\Unity Projects\Unity 5.0.1f1\Skyblock New\Temp\UnityVS_bin\Debug\UnityEngine.UI.dll
+D:\My Documents\Unity Projects\Unity 5.0.1f1\Skyblock New\Temp\UnityVS_bin\Debug\UnityEngine.xml
+D:\My Documents\Unity Projects\Unity 5.0.1f1\Skyblock New\Temp\UnityVS_bin\Debug\UnityEditor.xml
+D:\My Documents\Unity Projects\Unity 5.0.1f1\Skyblock New\Temp\UnityVS_bin\Debug\UnityEngine.UI.xml
+D:\My Documents\Unity Projects\Unity 5.0.1f1\Skyblock New\Temp\UnityVS_bin\Debug\UnityEditor.iOS.Extensions.Xcode.xml
+D:\My Documents\Unity Projects\Unity 5.0.1f1\Skyblock New\obj\Debug\UnityVS.Skyblock New.CSharp.csprojResolveAssemblyReference.cache
+D:\My Documents\Unity Projects\Unity 5.0.1f1\Skyblock New\obj\Debug\Assembly-CSharp.dll
+D:\My Documents\Unity Projects\Unity 5.0.1f1\Skyblock New\obj\Debug\Assembly-CSharp.pdb

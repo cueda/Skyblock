@@ -27,6 +27,19 @@ public class Spawner : MonoBehaviour
 
 	public Vector2 defGiftSpawnLocation = new Vector2(20, 8);	// Location to spawn gifts. Beyond the edge of the map, preferably
 
+    public static Spawner Instance { get; private set; }
+
+
+    void Awake()
+    {
+        // Singleton initialization.
+        if (Instance != null && Instance != this)
+            Destroy(gameObject);
+
+        Instance = this;
+    }
+
+
 	void Start()
 	{
 		// Add initial blocks, hardcoded, to the GameGrid

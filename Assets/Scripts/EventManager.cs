@@ -31,7 +31,6 @@ public class EventManager : MonoBehaviour
     public static class Game
     {
         public static Action<GameState.State> OnStateSet = delegate { };
-        public static Action OnItemSelectionMoved = delegate { };
         public static Action<EntityType> OnItemSelected = delegate { };
     }
 

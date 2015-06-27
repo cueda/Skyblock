@@ -50,7 +50,6 @@
      <Compile Include="Assets\Scripts\CameraFollowPlayer.cs" />
      <Compile Include="Assets\Scripts\CharacterController2D.cs" />
      <Compile Include="Assets\Scripts\ControllerInputHandler.cs" />
-     <Compile Include="Assets\Scripts\DisplayInventory.cs" />
      <Compile Include="Assets\Scripts\EntityType.cs" />
      <Compile Include="Assets\Scripts\EventManager.cs" />
      <Compile Include="Assets\Scripts\EvolveIntoGrass.cs" />
@@ -59,7 +58,12 @@
      <Compile Include="Assets\Scripts\GameGridCoords.cs" />
      <Compile Include="Assets\Scripts\GameState.cs" />
      <Compile Include="Assets\Scripts\GridOverlayMover.cs" />
+     <Compile Include="Assets\Scripts\InventoryButton.cs" />
+     <Compile Include="Assets\Scripts\InventoryManager.cs" />
      <Compile Include="Assets\Scripts\ObjectReferences.cs" />
+     <Compile Include="Assets\Scripts\PlayerAction.cs" />
+     <Compile Include="Assets\Scripts\PlayerActionInteract.cs" />
+     <Compile Include="Assets\Scripts\PlayerActionItem.cs" />
      <Compile Include="Assets\Scripts\PlayerFall.cs" />
      <Compile Include="Assets\Scripts\PlayerGridPosition.cs" />
      <Compile Include="Assets\Scripts\PlayerMove.cs" />
@@ -70,7 +74,6 @@
      <Compile Include="Assets\Scripts\Test\SpriteModifier.cs" />
      <Compile Include="Assets\Scripts\Test\TestInput.cs" />
      <Compile Include="Assets\Scripts\Test\TestTargeterButton.cs" />
-     <Compile Include="Assets\Scripts\ToggleInventoryMenu.cs" />
      <Compile Include="Assets\Scripts\TouchScreenInputHandler.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>D:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>

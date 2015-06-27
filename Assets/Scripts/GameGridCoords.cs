@@ -10,6 +10,7 @@ public class GameGridCoords {
 
 	public short x, y;
 
+
     /// <summary>
     /// Basic constructor
     /// </summary>
@@ -33,8 +34,6 @@ public class GameGridCoords {
 
         x = (short)Mathf.Round(coords.x);
         y = (short)Mathf.Round(coords.y);
-
-        //Debug.Log("Created new coordinates at " + x + ", " + y);
     }
 
 
@@ -43,15 +42,36 @@ public class GameGridCoords {
         return new GameGridCoords((short)(obj1.x + obj2.x), (short)(obj1.y + obj2.y));
     }
 
+
     public static Vector2 operator *(GameGridCoords obj, int scalar)
     {
         return new Vector2(obj.x * scalar, obj.y * scalar);
     }
 
+
     public Vector2 ToWorldSpace()
     {
         return new Vector2(x * WORLD_DIST_PER_UNIT, y * WORLD_DIST_PER_UNIT);
     }
+
+
+    public static bool Equals(GameGridCoords coords1, GameGridCoords coords2)
+    {
+        return (coords1.x == coords2.x && coords1.y == coords2.y);
+    }
+
+
+    public override bool Equals(object obj)
+    {
+        return this.GetHashCode() == obj.GetHashCode();
+    }
+
+
+    public override int GetHashCode()
+    {
+        return (x.GetHashCode() * short.MaxValue) + y.GetHashCode();
+    }
+
 
     public override string ToString()
     {
