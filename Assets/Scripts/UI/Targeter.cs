@@ -182,10 +182,10 @@ public class Targeter : MonoBehaviour
                 }
                 break;
             case EntityType.SHOVEL:
-                GameObject objectAtTarget = GameGrid.Instance.GetObjectAt(currentGridPosition);
+                GameEntity objectAtTarget = GameGrid.Instance.GetObjectAt(currentGridPosition);
                 if (objectAtTarget != null)
                 {
-                    if (objectAtTarget.tag == "GroundDirt" || objectAtTarget.tag == "GroundGrass")
+                    if (objectAtTarget.tag == "Ground")
                     {
                         ObjectReferences.spawner.RemoveObject(objectAtTarget);
                         GameData.Instance.dirtCollected++;

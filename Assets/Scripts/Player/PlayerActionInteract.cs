@@ -22,7 +22,7 @@ public class PlayerActionInteract : MonoBehaviour
     /// </summary>
 	public void InteractWithEntity()
     {
-        GameObject entity = GameGrid.Instance.GetObjectAt(playerGridPosition.GetPosition());
+        GameEntity entity = GameGrid.Instance.GetObjectAt(playerGridPosition.GetPosition());
 
         if(entity != null)
         {
@@ -52,33 +52,32 @@ public class PlayerActionInteract : MonoBehaviour
     /// <summary>
     /// Pick flower and remove flower object from game and game grid.
     /// </summary>
-    private void InteractWithFlower(GameObject flowerObject)
+    private void InteractWithFlower(GameEntity entity)
     {
-        FlowerEntity flower = flowerObject.GetComponent<FlowerEntity>();
+        FlowerEntity flower = (FlowerEntity)entity;
         if (flower.growthLevel == 2)
         {
             GameData.Instance.AddFlowers(GameData.Instance.flowerValueLevel);
-            // TODO: create a pool instead of destroying objects
-            ObjectReferences.spawner.RemoveObject(flowerObject);
+            ObjectReferences.spawner.RemoveObject(flower);
         }
     }
 
     // TODO: complete kitten interaction
-    private void InteractWithKitten(GameObject kittenObject)
+    private void InteractWithKitten(GameEntity entity)
     {
 
     }
 
 
     // TODO: complete vase interaction
-    private void InteractWithVase(GameObject vaseObject)
+    private void InteractWithVase(GameEntity entity)
     {
 
     }
 
 
     // TODO: complete upgrader interaction
-    private void InteractWithUpgrader(GameObject upgraderObject)
+    private void InteractWithUpgrader(GameEntity entity)
     {
 
     }

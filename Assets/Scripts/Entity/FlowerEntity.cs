@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class FlowerEntity : MonoBehaviour 
+public class FlowerEntity : GameEntity 
 {	
     [SerializeField]
 	private Sprite[] sprites;

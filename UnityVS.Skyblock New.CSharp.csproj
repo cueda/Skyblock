@@ -7,14 +7,16 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{0C3BC9EB-6752-EC63-2B23-8B3E1FB9ECFE}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <AssemblyName>Assembly-CSharp</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>Android:13</UnityBuildTarget>
     <UnityVersion>5.0.1f1</UnityVersion>
@@ -59,36 +61,40 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\AgnosticInputHandler.cs" />
     <Compile Include="Assets\Scripts\CameraFollowPlayer.cs" />
-    <Compile Include="Assets\Scripts\CharacterController2D.cs" />
-    <Compile Include="Assets\Scripts\ControllerInputHandler.cs" />
-    <Compile Include="Assets\Scripts\EntityType.cs" />
+    <Compile Include="Assets\Scripts\Entity\DirtEntity.cs" />
+    <Compile Include="Assets\Scripts\Entity\EntityType.cs" />
+    <Compile Include="Assets\Scripts\Entity\FlowerEntity.cs" />
+    <Compile Include="Assets\Scripts\Entity\GameEntity.cs" />
+    <Compile Include="Assets\Scripts\Entity\KittenEntity.cs" />
+    <Compile Include="Assets\Scripts\Entity\UpgraderEntity.cs" />
+    <Compile Include="Assets\Scripts\Entity\VaseEntity.cs" />
     <Compile Include="Assets\Scripts\EventManager.cs" />
-    <Compile Include="Assets\Scripts\EvolveIntoGrass.cs" />
-    <Compile Include="Assets\Scripts\FlowerEntity.cs" />
-    <Compile Include="Assets\Scripts\GameData.cs" />
-    <Compile Include="Assets\Scripts\GameGrid.cs" />
-    <Compile Include="Assets\Scripts\GameGridCoords.cs" />
-    <Compile Include="Assets\Scripts\GameState.cs" />
-    <Compile Include="Assets\Scripts\GridOverlayMover.cs" />
-    <Compile Include="Assets\Scripts\InventoryButton.cs" />
-    <Compile Include="Assets\Scripts\InventoryManager.cs" />
+    <Compile Include="Assets\Scripts\Game\GameData.cs" />
+    <Compile Include="Assets\Scripts\Game\GameGrid.cs" />
+    <Compile Include="Assets\Scripts\Game\GameGridCoords.cs" />
+    <Compile Include="Assets\Scripts\Game\GameState.cs" />
+    <Compile Include="Assets\Scripts\Input\AgnosticInputHandler.cs" />
+    <Compile Include="Assets\Scripts\Input\ControllerInputHandler.cs" />
+    <Compile Include="Assets\Scripts\Input\TouchScreenInputHandler.cs" />
     <Compile Include="Assets\Scripts\ObjectReferences.cs" />
-    <Compile Include="Assets\Scripts\PlayerAction.cs" />
-    <Compile Include="Assets\Scripts\PlayerActionInteract.cs" />
-    <Compile Include="Assets\Scripts\PlayerActionItem.cs" />
-    <Compile Include="Assets\Scripts\PlayerFall.cs" />
-    <Compile Include="Assets\Scripts\PlayerGridPosition.cs" />
-    <Compile Include="Assets\Scripts\PlayerMove.cs" />
+    <Compile Include="Assets\Scripts\Player\CharacterController2D.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerAction.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerActionInteract.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerActionItem.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerFall.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerGridPosition.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerMove.cs" />
     <Compile Include="Assets\Scripts\SoundManager.cs" />
     <Compile Include="Assets\Scripts\Spawner.cs" />
-    <Compile Include="Assets\Scripts\Targeter.cs" />
-    <Compile Include="Assets\Scripts\TargeterGrid.cs" />
     <Compile Include="Assets\Scripts\Test\SpriteModifier.cs" />
     <Compile Include="Assets\Scripts\Test\TestInput.cs" />
     <Compile Include="Assets\Scripts\Test\TestTargeterButton.cs" />
-    <Compile Include="Assets\Scripts\TouchScreenInputHandler.cs" />
+    <Compile Include="Assets\Scripts\UI\GridOverlayMover.cs" />
+    <Compile Include="Assets\Scripts\UI\InventoryButton.cs" />
+    <Compile Include="Assets\Scripts\UI\InventoryManager.cs" />
+    <Compile Include="Assets\Scripts\UI\Targeter.cs" />
+    <Compile Include="Assets\Scripts\UI\TargeterGrid.cs" />
     <Compile Include="Assets\TestFlowerDisplay.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2013\UnityVS.CSharp.targets" />

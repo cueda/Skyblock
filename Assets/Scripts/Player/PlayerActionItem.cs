@@ -71,9 +71,13 @@ public class PlayerActionItem : MonoBehaviour
         GameGridCoords downOne = new GameGridCoords(0,-1);
         if (!GameGrid.Instance.IsCoordinatesOccupied(coords))
         {
-            if (GameGrid.Instance.GetObjectAt(coords + downOne).tag.Equals("GroundDirt") || GameGrid.Instance.GetObjectAt(coords + downOne).tag.Equals("GroundGrass"))
+            GameEntity entity = GameGrid.Instance.GetObjectAt(coords + downOne);
+            if(entity != null)
             {
-                return true;
+                if (entity.tag.Equals("Ground"))
+                {
+                    return true;
+                }
             }
         }
         return false;

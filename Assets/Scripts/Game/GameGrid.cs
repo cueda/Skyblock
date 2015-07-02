@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class GameGrid : MonoBehaviour 
 {
     // Game world grid coordinates occupied with GameGridTiles
-	private Dictionary<GameGridCoords, GameObject> tiles = new Dictionary<GameGridCoords, GameObject>();
+	private Dictionary<GameGridCoords, GameEntity> tiles = new Dictionary<GameGridCoords, GameEntity>();
 	
 	public static GameGrid Instance {get; private set;}
 
@@ -21,7 +21,10 @@ public class GameGrid : MonoBehaviour
 	}
 
 
-	public void AddObject(GameObject obj, GameGridCoords coords)
+    // Adds a GameEntity to the given coordinates.
+    // If an entity already exists, return an error.
+    // Condition checking should be done outside of this class.
+	public void AddObject(GameEntity obj, GameGridCoords coords)
 	{
         try
         {
@@ -34,11 +37,11 @@ public class GameGrid : MonoBehaviour
 	}
 
 
-	// Attempts to return object at coordinates.
+	// Attempts to return object's GameEntity at coordinates.
 	// If not found, returns null.
-	public GameObject GetObjectAt(GameGridCoords coords)
+	public GameEntity GetObjectAt(GameGridCoords coords)
 	{
-        GameObject value;
+        GameEntity value;
 		if(tiles.TryGetValue(coords, out value))
 			return value;
 
@@ -50,7 +53,7 @@ public class GameGrid : MonoBehaviour
 	// If found, true; if not, false.
 	public bool IsCoordinatesOccupied(GameGridCoords coords)
     {
-        GameObject value;
+        GameEntity value;
         if (tiles.TryGetValue(coords, out value))
         {
             return true;
@@ -60,7 +63,7 @@ public class GameGrid : MonoBehaviour
 	}
 	
 
-	// Attempts to remove object at coordinates.
+	// Attempts to remove entry at coordinates.
 	// If not found, returns false.
 	public bool RemoveAtCoordinates(GameGridCoords coords)
 	{
