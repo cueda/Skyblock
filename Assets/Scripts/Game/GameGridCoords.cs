@@ -7,6 +7,7 @@ using System.Collections;
 public class GameGridCoords {
 
     public static int WORLD_DIST_PER_UNIT = 2;
+    public static GameGridCoords origin { get { return new GameGridCoords(0, 0); } }
 
 	public short x, y;
 
@@ -52,12 +53,6 @@ public class GameGridCoords {
     public Vector2 ToWorldSpace()
     {
         return new Vector2(x * WORLD_DIST_PER_UNIT, y * WORLD_DIST_PER_UNIT);
-    }
-
-
-    public static bool Equals(GameGridCoords coords1, GameGridCoords coords2)
-    {
-        return (coords1.x == coords2.x && coords1.y == coords2.y);
     }
 
 

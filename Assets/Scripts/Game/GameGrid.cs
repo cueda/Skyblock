@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class GameGrid : MonoBehaviour 
 {
     // Game world grid coordinates occupied with GameGridTiles
-	private Dictionary<GameGridCoords, GameEntity> tiles = new Dictionary<GameGridCoords, GameEntity>();
+	private Dictionary<GameGridCoords, GridEntity> tiles = new Dictionary<GameGridCoords, GridEntity>();
 	
 	public static GameGrid Instance {get; private set;}
 
@@ -21,10 +21,10 @@ public class GameGrid : MonoBehaviour
 	}
 
 
-    // Adds a GameEntity to the given coordinates.
+    // Adds a GridEntity to the given coordinates.
     // If an entity already exists, return an error.
     // Condition checking should be done outside of this class.
-	public void AddObject(GameEntity obj, GameGridCoords coords)
+	public void AddObject(GridEntity obj, GameGridCoords coords)
 	{
         try
         {
@@ -37,11 +37,11 @@ public class GameGrid : MonoBehaviour
 	}
 
 
-	// Attempts to return object's GameEntity at coordinates.
+	// Attempts to return object's GridEntity at coordinates.
 	// If not found, returns null.
-	public GameEntity GetObjectAt(GameGridCoords coords)
+	public GridEntity GetObjectAt(GameGridCoords coords)
 	{
-        GameEntity value;
+        GridEntity value;
 		if(tiles.TryGetValue(coords, out value))
 			return value;
 
@@ -53,7 +53,7 @@ public class GameGrid : MonoBehaviour
 	// If found, true; if not, false.
 	public bool IsCoordinatesOccupied(GameGridCoords coords)
     {
-        GameEntity value;
+        GridEntity value;
         if (tiles.TryGetValue(coords, out value))
         {
             return true;

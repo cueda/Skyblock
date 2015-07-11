@@ -6,7 +6,7 @@ using System.Collections;
 public class InventoryButton : MonoBehaviour
 {
     [SerializeField]
-    private InventoryManager inventoryManager;
+    private InventoryMenu inventoryManager;
     [SerializeField]
     private Image spriteCurrent;
 

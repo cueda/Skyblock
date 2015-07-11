@@ -2,7 +2,7 @@
 using System;
 using System.Collections;
 
-public class VaseEntity : GameEntity 
+public class VaseEntity : GridEntity 
 {
     [SerializeField]
     private bool potato;

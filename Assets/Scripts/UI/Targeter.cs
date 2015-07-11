@@ -173,22 +173,29 @@ public class Targeter : MonoBehaviour
                 if (!GameGrid.Instance.IsCoordinatesOccupied(currentGridPosition) && !GameGrid.Instance.IsCoordinatesOccupied(currentGridPosition + new GameGridCoords(0, -1)))
                 {
                     // Check for dirt in inventory.
-                    if (GameData.Instance.dirtCollected > 0)
+                    if (GameData.Instance.DirtCollected > 0)
                     {
                         // Add dirt block and use one dirt resource.
                         ObjectReferences.spawner.SpawnDirtBlock(currentGridPosition);
-                        GameData.Instance.dirtCollected--;
+                        GameData.Instance.DirtCollected--;
                     }
                 }
                 break;
             case EntityType.SHOVEL:
-                GameEntity objectAtTarget = GameGrid.Instance.GetObjectAt(currentGridPosition);
+                GridEntity objectAtTarget = GameGrid.Instance.GetObjectAt(currentGridPosition);
                 if (objectAtTarget != null)
                 {
                     if (objectAtTarget.tag == "Ground")
                     {
-                        ObjectReferences.spawner.RemoveObject(objectAtTarget);
-                        GameData.Instance.dirtCollected++;
+                        if(!currentGridPosition.Equals(GameGridCoords.origin))
+                        {
+                            ObjectReferences.spawner.RemoveObject(objectAtTarget);
+                            GameData.Instance.DirtCollected++;
+                        }
+                        else
+                        {
+                            Debug.Log("Please don't remove the spawn point block.");
+                        }
                     }
                 }
                 break;

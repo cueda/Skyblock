@@ -11,6 +11,7 @@ public class GameState : MonoBehaviour
         MOVE,
         TARGET,
         INVENTORY,
+        BALLOON,
         MENU
     }
 

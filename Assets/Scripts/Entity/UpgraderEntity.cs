@@ -2,7 +2,7 @@
 using System;
 using System.Collections;
 
-public class UpgraderEntity : GameEntity 
+public class UpgraderEntity : GridEntity 
 {
 
 

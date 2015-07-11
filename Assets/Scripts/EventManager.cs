@@ -39,5 +39,25 @@ public class EventManager : MonoBehaviour
 
     }
 
+    public static class Values
+    {
+        public static Action<int, int> OnLifetimeFlowersCollectedChanged = delegate { };
+        public static Action<int, int> OnFlowersCollectedChanged = delegate { };
+        public static Action<int, int> OnDirtCollectedChanged = delegate { };
+        public static Action<int, int> OnKittensCollectedChanged = delegate { };
+        public static Action<int, int> OnVasesCollectedChanged = delegate { };
+        public static Action<int, int> OnUpgradersCollectedChanged = delegate { };
+
+        public static Action<int, int> OnDirtCostChanged = delegate { };
+        public static Action<int, int> OnKittenCostChanged = delegate { };
+    }
+
+    public static class Upgrades
+    {
+        public static Action OnFlowerValueLevelChanged = delegate { };
+        public static Action OnKittenGenerateLevelChanged = delegate { };
+        public static Action OnKittenStorageLevelChanged = delegate { };
+    }
+
     #endregion
 }

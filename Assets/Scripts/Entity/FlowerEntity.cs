@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class FlowerEntity : GameEntity 
+public class FlowerEntity : GridEntity 
 {	
     [SerializeField]
 	private Sprite[] sprites;
@@ -41,15 +41,15 @@ public class FlowerEntity : GameEntity
 		}
 	}
 
-
-    /*
-	void OnTriggerStay2D(Collider2D other)
-	{
-		if(growthLevel == 2 && player.interact)
-		{
-			GameState.Instance.AddFlowers(GameState.Instance.flowerValueLevel);
-			ObjectReferences.spawner.RemoveObject(this.gameObject);
-		}
-	}
-     */
+    /// <summary>
+    /// Pick flower and remove flower object from game and game grid.
+    /// </summary>
+    public override void Interact()
+    {
+        if (growthLevel == 2)
+        {
+            GameData.Instance.AddFlowers(GameData.Instance.flowerValueLevel);
+            ObjectReferences.spawner.RemoveObject(this);
+        }
+    }
 }

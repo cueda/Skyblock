@@ -2,7 +2,7 @@
 using System;
 using System.Collections;
 
-public class GameEntity : MonoBehaviour 
+public class GridEntity : MonoBehaviour 
 {
     [HideInInspector]
     public GameGridCoords gridPosition { get; private set; }
@@ -10,5 +10,13 @@ public class GameEntity : MonoBehaviour
     public void SetGridPosition(GameGridCoords coords)
     {
         gridPosition = new GameGridCoords(coords.x, coords.y);
+    }
+
+    /// <summary>
+    /// Override this for every GridEntity child object.
+    /// </summary>
+    public virtual void Interact()
+    {
+        Debug.LogError("This entity's Interact functionality is not overriden!");
     }
 }

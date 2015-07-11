@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class DirtEntity : GameEntity
+public class DirtEntity : GridEntity
 {
 
     [SerializeField]

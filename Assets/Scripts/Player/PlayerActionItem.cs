@@ -31,50 +31,71 @@ public class PlayerActionItem : MonoBehaviour
             case EntityType.DIRT:
                 EventManager.Game.OnStateSet(GameState.State.TARGET);
                 break;
+
             case EntityType.SHOVEL:
                 EventManager.Game.OnStateSet(GameState.State.TARGET);
                 break;
+
             case EntityType.FLOWER1:
-                if (IsObjectPlaceableAt(currentPosition))
+                if (IsObjectPlaceableAt(currentPosition, true))
                 {
                     ObjectReferences.spawner.SpawnFlower(currentPosition);
                 }
                 break;
+
             case EntityType.KITTEN:
-                if (IsObjectPlaceableAt(currentPosition) && GameData.Instance.kittensCollected > 0)
+                if (IsObjectPlaceableAt(currentPosition, false) && GameData.Instance.KittensCollected > 0)
                 {
                     ObjectReferences.spawner.SpawnKitten(currentPosition);
-                    GameData.Instance.kittensCollected--;
+                    GameData.Instance.KittensCollected--;
                 }
                 break;
+
             case EntityType.VASE:
-                if (IsObjectPlaceableAt(currentPosition) && GameData.Instance.vasesCollected > 0)
+                if (IsObjectPlaceableAt(currentPosition, false) && GameData.Instance.VasesCollected > 0)
                 {
                     ObjectReferences.spawner.SpawnVase(currentPosition);
-                    GameData.Instance.vasesCollected--;
+                    GameData.Instance.VasesCollected--;
                 }
                 break;
+
             case EntityType.UPGRADER:
-                if (IsObjectPlaceableAt(currentPosition) && GameData.Instance.upgraderCollected > 0)
+                if (IsObjectPlaceableAt(currentPosition, false) && GameData.Instance.UpgradersCollected > 0)
                 {
                     ObjectReferences.spawner.SpawnUpgrader(currentPosition);
-                    GameData.Instance.upgraderCollected--;
+                    GameData.Instance.UpgradersCollected--;
                 }
                 break;
+
+            case EntityType.BALLOON:
+                EventManager.Game.OnStateSet(GameState.State.BALLOON);
+                break;
+
             default:
                 break;
         }
     }
 
-    private bool IsObjectPlaceableAt(GameGridCoords coords)
+    /// <summary>
+    /// Checks to see if ground is at location.
+    /// Parameter matchGrassOnly checks if ground is grass, otherwise returns false.
+    /// </summary>
+    private bool IsObjectPlaceableAt(GameGridCoords coords, bool matchGrassOnly)
     {
         GameGridCoords downOne = new GameGridCoords(0,-1);
         if (!GameGrid.Instance.IsCoordinatesOccupied(coords))
         {
-            GameEntity entity = GameGrid.Instance.GetObjectAt(coords + downOne);
+            GridEntity entity = GameGrid.Instance.GetObjectAt(coords + downOne);
             if(entity != null)
             {
-                if (entity.tag.Equals("Ground"))
+                if(matchGrassOnly)
+                {
+                    if (((DirtEntity)entity).hasGrownGrass)
+                    {
+                        return true;
+                    }
+                }
+                else if (entity.tag.Equals("Ground"))
                 {
                     return true;
                 }

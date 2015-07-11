@@ -13,4 +13,5 @@ public enum EntityType
     KITTEN,
     VASE,
     UPGRADER,
+    BALLOON
 }

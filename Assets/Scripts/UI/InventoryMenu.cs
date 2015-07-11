@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using System;
 using System.Collections;
 
-public class InventoryManager : MonoBehaviour 
+public class InventoryMenu : MonoBehaviour 
 {    
     [SerializeField]
     private EntityType[] selectableEntities;

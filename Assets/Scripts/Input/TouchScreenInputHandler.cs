@@ -28,7 +28,7 @@ public class TouchScreenInputHandler : MonoBehaviour
     
     void OnStateSet(GameState.State state)
     {
-        if(state == GameState.State.TARGET)
+        if(state != GameState.State.MOVE)
         {
             TouchInputPanel.SetActive(false);
         }

@@ -47,10 +47,12 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\CameraFollowPlayer.cs" />
+     <Compile Include="Assets\Scripts\Entity\BalloonEntity.cs" />
      <Compile Include="Assets\Scripts\Entity\DirtEntity.cs" />
      <Compile Include="Assets\Scripts\Entity\EntityType.cs" />
      <Compile Include="Assets\Scripts\Entity\FlowerEntity.cs" />
-     <Compile Include="Assets\Scripts\Entity\GameEntity.cs" />
+     <Compile Include="Assets\Scripts\Entity\GiftEntity.cs" />
+     <Compile Include="Assets\Scripts\Entity\GridEntity.cs" />
      <Compile Include="Assets\Scripts\Entity\KittenEntity.cs" />
      <Compile Include="Assets\Scripts\Entity\UpgraderEntity.cs" />
      <Compile Include="Assets\Scripts\Entity\VaseEntity.cs" />
@@ -72,15 +74,21 @@
      <Compile Include="Assets\Scripts\Player\PlayerMove.cs" />
      <Compile Include="Assets\Scripts\SoundManager.cs" />
      <Compile Include="Assets\Scripts\Spawner.cs" />
+     <Compile Include="Assets\Scripts\Test\DebuggingScript.cs" />
      <Compile Include="Assets\Scripts\Test\SpriteModifier.cs" />
+     <Compile Include="Assets\Scripts\Test\TestFlowerDisplay.cs" />
      <Compile Include="Assets\Scripts\Test\TestInput.cs" />
      <Compile Include="Assets\Scripts\Test\TestTargeterButton.cs" />
+     <Compile Include="Assets\Scripts\UI\BalloonMenu.cs" />
+     <Compile Include="Assets\Scripts\UI\DisplayValueUpdater.cs" />
+     <Compile Include="Assets\Scripts\UI\FloatingTextManager.cs" />
      <Compile Include="Assets\Scripts\UI\GridOverlayMover.cs" />
      <Compile Include="Assets\Scripts\UI\InventoryButton.cs" />
-     <Compile Include="Assets\Scripts\UI\InventoryManager.cs" />
+     <Compile Include="Assets\Scripts\UI\InventoryMenu.cs" />
+     <Compile Include="Assets\Scripts\UI\StatsDisplay.cs" />
      <Compile Include="Assets\Scripts\UI\Targeter.cs" />
      <Compile Include="Assets\Scripts\UI\TargeterGrid.cs" />
-     <Compile Include="Assets\TestFlowerDisplay.cs" />
+     <Compile Include="Assets\Scripts\UI\TextMeshDisplay.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>D:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
