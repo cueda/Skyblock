@@ -26,6 +26,7 @@ public class FloatingTextManager : MonoBehaviour
 
     /// <summary>
     /// Creates a gameobject with floating text relative to the player.
+    /// Sets text to default color.
     /// </summary>
 	public void SpawnTextPrefab(string text)
     {
@@ -33,5 +34,19 @@ public class FloatingTextManager : MonoBehaviour
         GameObject textInstance = (GameObject)Instantiate(textPrefab, ObjectReferences.player.position + playerOffset, Quaternion.identity);
         TextMeshDisplay displayText = textInstance.GetComponent<TextMeshDisplay>();
         displayText.SetText(text);
+    }
+
+
+    /// <summary>
+    /// Creates a gameobject with floating text relative to the player.
+    /// Sets text to user-specified color.
+    /// </summary>
+    public void SpawnTextPrefab(string text, Color color)
+    {
+        /// TODO: Implement pooling system to include created text prefab.
+        GameObject textInstance = (GameObject)Instantiate(textPrefab, ObjectReferences.player.position + playerOffset, Quaternion.identity);
+        TextMeshDisplay displayText = textInstance.GetComponent<TextMeshDisplay>();
+        displayText.SetText(text);
+        displayText.SetColor(color);
     }
 }

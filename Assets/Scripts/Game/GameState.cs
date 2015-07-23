@@ -12,6 +12,7 @@ public class GameState : MonoBehaviour
         TARGET,
         INVENTORY,
         BALLOON,
+        UPGRADE,
         MENU
     }
 

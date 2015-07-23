@@ -6,12 +6,12 @@ public class FlowerEntity : GridEntity
     [SerializeField]
 	private Sprite[] sprites;
     [SerializeField]
-	public int minGrowthTime = 3;
+	private int minGrowthTime = 3;
     [SerializeField]
-	public int maxGrowthTime = 7;
+	private int maxGrowthTime = 7;
 
 
-	public int growthLevel;
+	private int growthLevel;
 
 	private float growthTime;
     private float growTick;
@@ -21,25 +21,43 @@ public class FlowerEntity : GridEntity
 	void Start () 
 	{
 		spRenderer = GetComponent<SpriteRenderer>();
-
-		growthTime = Random.Range(minGrowthTime, maxGrowthTime);
-		growthLevel = 0;
-		growTick = 0F;
 	}
 
 
-	void Update () 
-	{
-		growTick += Time.deltaTime;
+    void OnEnable()
+    {
+        growthTime = Random.Range(minGrowthTime, maxGrowthTime);
+        growthLevel = 0;
 
-		if(growTick >= growthTime && growthLevel < sprites.Length-1)
-		{
-			growthLevel++;
-			spRenderer.sprite = sprites[growthLevel];
-			growTick -= growthTime;
-			growthTime = Random.Range(minGrowthTime, maxGrowthTime);
-		}
-	}
+        StartCoroutine(BeginGrowing());
+    }
+
+
+    private IEnumerator BeginGrowing()
+    {
+        for(float timer = 0; ; timer += Time.deltaTime)
+        {
+            yield return null;
+            if (timer >= growthTime)
+            {
+                // If growthLevel is not max, go up a level
+                if (growthLevel < sprites.Length - 1)
+                {
+                    growthLevel++;
+                    spRenderer.sprite = sprites[growthLevel];
+                    timer -= growthTime;
+                    growthTime = Random.Range(minGrowthTime, maxGrowthTime);
+
+                    // If maximum level reached, break loop
+                    if(growthLevel >= sprites.Length - 1)
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
 
     /// <summary>
     /// Pick flower and remove flower object from game and game grid.
@@ -48,7 +66,7 @@ public class FlowerEntity : GridEntity
     {
         if (growthLevel == 2)
         {
-            GameData.Instance.AddFlowers(GameData.Instance.flowerValueLevel);
+            GameData.Instance.AddFlowers(GameData.Instance.FlowerValueLevel);
             ObjectReferences.spawner.RemoveObject(this);
         }
     }

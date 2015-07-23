@@ -18,9 +18,13 @@ public class DisplayValueUpdater : MonoBehaviour
     {
         //COUNT_FLOWERS,
         //COUNT_DIRT,
-        COUNT_BALLOON_DIRT_COST,
         //COUNT_KITTENS,
-        COUNT_BALLOON_KITTEN_COST
+        BALLOON_DIRT_COST,
+        BALLOON_KITTEN_COST,
+        UPGRADE_FLOWERVALUE_COST,
+        UPGRADE_KITTENSTORE_COST,
+        UPGRADE_FLOWERVALUE_LABEL,
+        UPGRADE_KITTENSTORE_LABEL
     }
 
 
@@ -30,11 +34,23 @@ public class DisplayValueUpdater : MonoBehaviour
 
         switch(typeOfText)
         {
-            case TextType.COUNT_BALLOON_DIRT_COST:
+            case TextType.BALLOON_DIRT_COST:
                 EventManager.Values.OnDirtCostChanged += UpdateText;
                 break;
-            case TextType.COUNT_BALLOON_KITTEN_COST:
+            case TextType.BALLOON_KITTEN_COST:
                 EventManager.Values.OnKittenCostChanged += UpdateText;
+                break;
+            case TextType.UPGRADE_FLOWERVALUE_COST:
+                EventManager.Values.OnFlowerValueLevelChanged += UpdateText;
+                break;
+            case TextType.UPGRADE_FLOWERVALUE_LABEL:
+                EventManager.Values.OnFlowerValueLevelChanged += UpdateText;
+                break;
+            case TextType.UPGRADE_KITTENSTORE_COST:
+                EventManager.Values.OnKittenStorageLevelChanged += UpdateText;
+                break;
+            case TextType.UPGRADE_KITTENSTORE_LABEL:
+                EventManager.Values.OnKittenStorageLevelChanged += UpdateText;
                 break;
             default:
                 break;
@@ -48,11 +64,23 @@ public class DisplayValueUpdater : MonoBehaviour
     {
         switch(typeOfText)
         {
-            case TextType.COUNT_BALLOON_DIRT_COST:
-                textDisplay.text = "Flowers: \n" + GameData.Instance.GetDirtCost();
+            case TextType.BALLOON_DIRT_COST:
+                textDisplay.text = "Flowers: \n" + GameData.Instance.FlowersRequiredForDirt;
                 break;
-            case TextType.COUNT_BALLOON_KITTEN_COST:
-                textDisplay.text = "Flowers: \n" + GameData.Instance.GetKittenCost();
+            case TextType.BALLOON_KITTEN_COST:
+                textDisplay.text = "Flowers: \n" + GameData.Instance.FlowersRequiredForKitten;
+                break;
+            case TextType.UPGRADE_FLOWERVALUE_COST:
+                textDisplay.text = "Flowers: \n" + GameData.Instance.GetFlowerValueUpgradeCost();
+                break;
+            case TextType.UPGRADE_FLOWERVALUE_LABEL:
+                textDisplay.text = "Improve Flower Growth Lv [" + GameData.Instance.FlowerValueLevel + "]";
+                break;
+            case TextType.UPGRADE_KITTENSTORE_COST:
+                textDisplay.text = "Flowers: \n" + GameData.Instance.GetKittenStorageUpgradeCost();
+                break;
+            case TextType.UPGRADE_KITTENSTORE_LABEL:
+                textDisplay.text = "Expand Kitten Storehouses Lv [" + GameData.Instance.KittenStorageLevel + "]";
                 break;
             default:
                 break;

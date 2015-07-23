@@ -16,8 +16,8 @@ public class KittenEntity : GridEntity
     void Awake () 
     {
         particleSystem = GetComponentInChildren<ParticleSystem>();
-        EventManager.Upgrades.OnKittenGenerateLevelChanged += OnKittenGenerateLevelChanged;
-        EventManager.Upgrades.OnKittenStorageLevelChanged += OnKittenStorageLevelChanged;
+        EventManager.Values.OnKittenGenerateLevelChanged += OnKittenGenerateLevelChanged;
+        EventManager.Values.OnKittenStorageLevelChanged += OnKittenStorageLevelChanged;
     }
 
 
@@ -54,13 +54,13 @@ public class KittenEntity : GridEntity
     }
 
 
-    private void OnKittenStorageLevelChanged()
+    private void OnKittenStorageLevelChanged(int unused1, int unused2)
     {
-        maxFlowersStorable = 5 * GameData.Instance.kittenStorageLevel;
+        maxFlowersStorable = 5 + (2 * (GameData.Instance.KittenStorageLevel - 1));
     }
 
 
-    private void OnKittenGenerateLevelChanged()
+    private void OnKittenGenerateLevelChanged(int unused1, int unused2)
     {
         flowerGenerationRate = 5 - GameData.Instance.kittenGenerateLevel;
         if(flowerGenerationRate <= 0)

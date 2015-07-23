@@ -80,25 +80,27 @@ public class Spawner : MonoBehaviour
             GameGrid.Instance.AddObject(newGrassEntity, newCoords);
             newGrass.transform.parent = platformsParentTransform;
         }
+
+        EventManager.Values.OnLifetimeFlowersCollectedChanged += OnLifetimeFlowersCollectedChanged;
 	}
 
 
-    //void Update()
-    //{
-    //    if (GameData.Instance.LifetimeFlowersCollected >= 100 && !GameData.Instance.vaseHasSpawned)
-    //    {
-    //        Debug.Log("Spawn a vase at 100.");
-    //        //SpawnGiftSpecial("vase");
-    //        GameData.Instance.vaseHasSpawned = true;
-    //    }
+    private void OnLifetimeFlowersCollectedChanged(int oldVal, int newVal)
+    {
+        if (GameData.Instance.LifetimeFlowersCollected >= 100 && !GameData.Instance.upgraderHasSpawned)
+        {
+            Debug.Log("Spawn an upgrader at 100 lifetime flowers.");
+            SpawnGiftWithContents(GiftEntity.Contents.UPGRADER, true);
+            GameData.Instance.upgraderHasSpawned = true;
+        }
 
-    //    if (GameData.Instance.LifetimeFlowersCollected >= 250 && !GameData.Instance.upgraderHasSpawned)
-    //    {
-    //        Debug.Log("Spawn an upgrader at 250.");
-    //        //SpawnGiftSpecial("upgrader");
-    //        GameData.Instance.upgraderHasSpawned = true;
-    //    }
-    //}
+        //    if (GameData.Instance.LifetimeFlowersCollected >= 100 && !GameData.Instance.vaseHasSpawned)
+        //    {
+        //        Debug.Log("Spawn a vase at 100.");
+        //        //SpawnGiftSpecial("vase");
+        //        GameData.Instance.vaseHasSpawned = true;
+        //    }
+    }
 
 
 	public void SpawnFlower(GameGridCoords coords)
@@ -164,24 +166,14 @@ public class Spawner : MonoBehaviour
     }
 
 
-    public void SpawnGiftWithContents(GiftEntity.Contents contents)
+    public void SpawnGiftWithContents(GiftEntity.Contents contents, bool isSpecial)
     {
         GameObject gift = (GameObject)Instantiate(spawnGiftDirt, giftSpawnLocation, Quaternion.identity);
         GiftEntity giftEntity = gift.GetComponent<GiftEntity>();
         giftEntity.contents = contents;
+        giftEntity.SetSpecialState(isSpecial);
         gift.transform.parent = entitiesParentTransform;
     }
-
-
-    /*
-
-    private void SpawnGiftSpecial(string request)
-    {
-        GameObject gift = (GameObject)Instantiate(spawnGiftSpecial, defGiftSpawnLocation, Quaternion.identity);
-        GiftMove giftState = gift.GetComponent<GiftMove>();
-        giftState.request = request;
-    }
-     * */
 
 
     public void RemoveObject(GridEntity entity)

@@ -102,6 +102,7 @@
     <Compile Include="Assets\Scripts\UI\Targeter.cs" />
     <Compile Include="Assets\Scripts\UI\TargeterGrid.cs" />
     <Compile Include="Assets\Scripts\UI\TextMeshDisplay.cs" />
+    <Compile Include="Assets\Scripts\UI\UpgradeMenu.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2013\UnityVS.CSharp.targets" />
 </Project>

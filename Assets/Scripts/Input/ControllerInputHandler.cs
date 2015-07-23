@@ -55,27 +55,27 @@ public class ControllerInputHandler : MonoBehaviour
     {
         float verticalInput = Input.GetAxis("Vertical");
 
-        // If input is up (i.e. negative input)        
-        if (verticalInput < -1f * controllerDeadZone && !IsControllerUpHeld)
-        {
-            IsControllerUpHeld = true;
-            AgnosticInputHandler.Instance.UpPressed();
-        }
-        if (verticalInput > -1f * controllerDeadZone && IsControllerUpHeld)
+        // If input is up (i.e. positive input)
+        if (verticalInput > controllerDeadZone && IsControllerUpHeld)
         {
             IsControllerUpHeld = false;
+            AgnosticInputHandler.Instance.UpPressed();
+        }
+        if (verticalInput < controllerDeadZone && !IsControllerUpHeld)
+        {
+            IsControllerUpHeld = true;
             AgnosticInputHandler.Instance.UpReleased();
         }
 
-        // If input is down (i.e. positive input)
-        if (verticalInput > controllerDeadZone && !IsControllerDownHeld)
-        {
-            IsControllerDownHeld = true;
-            AgnosticInputHandler.Instance.DownPressed();
-        }
-        if (verticalInput < controllerDeadZone && IsControllerDownHeld)
+        // If input is down (i.e. negative input)
+        if (verticalInput < -1f * controllerDeadZone && IsControllerDownHeld)
         {
             IsControllerDownHeld = false;
+            AgnosticInputHandler.Instance.DownPressed();
+        }
+        if (verticalInput > -1f * controllerDeadZone && !IsControllerDownHeld)
+        {
+            IsControllerDownHeld = true;
             AgnosticInputHandler.Instance.DownReleased();
         }
     }

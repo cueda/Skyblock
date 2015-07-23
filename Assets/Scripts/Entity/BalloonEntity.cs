@@ -45,10 +45,10 @@ public class BalloonEntity : MonoBehaviour
         switch(request)
         {
             case RequestType.DIRT:
-                Spawner.Instance.SpawnGiftWithContents(GiftEntity.Contents.DIRT);
+                Spawner.Instance.SpawnGiftWithContents(GiftEntity.Contents.DIRT, false);
                 break;
             case RequestType.KITTEN:
-                Spawner.Instance.SpawnGiftWithContents(GiftEntity.Contents.KITTEN);
+                Spawner.Instance.SpawnGiftWithContents(GiftEntity.Contents.KITTEN, false);
                 break;
             default:
                 break;

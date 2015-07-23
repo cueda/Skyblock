@@ -50,13 +50,10 @@ public class EventManager : MonoBehaviour
 
         public static Action<int, int> OnDirtCostChanged = delegate { };
         public static Action<int, int> OnKittenCostChanged = delegate { };
-    }
 
-    public static class Upgrades
-    {
-        public static Action OnFlowerValueLevelChanged = delegate { };
-        public static Action OnKittenGenerateLevelChanged = delegate { };
-        public static Action OnKittenStorageLevelChanged = delegate { };
+        public static Action<int, int> OnFlowerValueLevelChanged = delegate { };
+        public static Action<int, int> OnKittenGenerateLevelChanged = delegate { };
+        public static Action<int, int> OnKittenStorageLevelChanged = delegate { };
     }
 
     #endregion

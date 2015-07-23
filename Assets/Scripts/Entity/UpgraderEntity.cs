@@ -4,25 +4,8 @@ using System.Collections;
 
 public class UpgraderEntity : GridEntity 
 {
-
-
-	void Awake() 
+	public override void Interact() 
 	{
-	
-	}
-	
-	void OnEnable()
-	{
-	
-	}
-	
-	void OnDisable()
-	{
-	
-	}
-	
-	void Update() 
-	{
-	
+        EventManager.Game.OnStateSet(GameState.State.UPGRADE);
 	}
 }
