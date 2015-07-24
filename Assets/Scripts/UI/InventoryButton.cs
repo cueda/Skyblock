@@ -49,7 +49,8 @@ public class InventoryButton : MonoBehaviour
         }
         else if (GameState.IsCurrentState(GameState.State.INVENTORY))
         {
-            EventManager.Game.OnStateSet(GameState.State.MOVE);
+            inventoryManager.OnButtonConfirmPressed();
+            //EventManager.Game.OnStateSet(GameState.State.MOVE);
         }
     }
 

@@ -23,9 +23,8 @@ public class BalloonMenu : MonoBehaviour
 	    if(state == GameState.State.BALLOON)
         {
             balloonUIPanel.SetActive(true);
-            if(TouchScreenInputHandler.IS_TOUCH_SCREEN)
+            if(!TouchScreenInputHandler.IS_TOUCH_SCREEN)
             {
-                Debug.Log("Remember to change it back!");
                 EventSystem.current.SetSelectedGameObject(firstButton);
             }
         }

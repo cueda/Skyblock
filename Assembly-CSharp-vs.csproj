@@ -82,6 +82,7 @@
      <Compile Include="Assets\Scripts\UI\BalloonMenu.cs" />
      <Compile Include="Assets\Scripts\UI\DisplayValueUpdater.cs" />
      <Compile Include="Assets\Scripts\UI\FloatingTextManager.cs" />
+     <Compile Include="Assets\Scripts\UI\FullscreenCancelButton.cs" />
      <Compile Include="Assets\Scripts\UI\GridOverlayMover.cs" />
      <Compile Include="Assets\Scripts\UI\InventoryButton.cs" />
      <Compile Include="Assets\Scripts\UI\InventoryMenu.cs" />

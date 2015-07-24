@@ -23,9 +23,8 @@ public class UpgradeMenu : MonoBehaviour
         if (state == GameState.State.UPGRADE)
         {
             upgradeUIPanel.SetActive(true);
-            if (TouchScreenInputHandler.IS_TOUCH_SCREEN)
+            if (!TouchScreenInputHandler.IS_TOUCH_SCREEN)
             {
-                Debug.Log("Remember to change it back!");
                 EventSystem.current.SetSelectedGameObject(firstButton);
             }
         }
