@@ -9,11 +9,26 @@ public class TargeterGrid : MonoBehaviour
 
 	void Awake()
     {
-        // Enable this object only when in Target state
+        // Needs to be added to delegate, even before first enable
         EventManager.Game.OnStateSet += OnStateSet;
 
         gameObject.SetActive(false);
 	}
+
+    void OnEnable()
+    {
+        // Enable this object only when in Target state
+        // Remove any additional subscriptions to delegate before adding
+        EventManager.Game.OnStateSet -= OnStateSet;
+        EventManager.Game.OnStateSet += OnStateSet;
+    }
+
+
+    void OnDisable()
+    {
+        // Enable this object only when in Target state
+        EventManager.Game.OnStateSet += OnStateSet;
+    }
 
     void Update()
     {

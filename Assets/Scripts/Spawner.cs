@@ -24,15 +24,24 @@ public class Spawner : MonoBehaviour
     private GameObject spawnVase;
     [SerializeField]
     private GameObject spawnUpgrader;
+    [SerializeField]
+    private GameObject spawnTree;
+    [SerializeField]
+    private GameObject spawnWoodPlatform;
+    [SerializeField]
+    private GameObject spawnWorkshop;
+    [SerializeField]
+    private GameObject spawnKittenHouse;
 
+    [SerializeField]
+    private GameObject spawnFiller;
+    
     [Space(10)]
 
     [SerializeField]
     private GameObject spawnBalloon;
     [SerializeField]
     private GameObject spawnGiftDirt;
-    [SerializeField]
-    private GameObject spawnGiftSpecial;
 
     [Space(20)]
 	
@@ -43,7 +52,13 @@ public class Spawner : MonoBehaviour
     [SerializeField]
     private Vector2 kittenDrawOffset = new Vector2(0, -.8F);		// Location to draw kitten sprite relative to game coordinates
     [SerializeField]
-    private Vector2 upgraderDrawOffset = new Vector2(0, -.5F);	    // Location to draw ugprader sprite relative to game coordinates
+    private Vector2 upgraderDrawOffset = new Vector2(0, -.5F);	    // Location to draw upgrader sprite relative to game coordinates
+    [SerializeField]
+    private Vector2 treeDrawOffset = new Vector2(0, -.6F);		    // Location to draw flower sprite relative to game coordinates
+    [SerializeField]
+    private Vector2 workshopDrawOffset = new Vector2(0, -.5F);	    // Location to draw workshop sprite relative to game coordinates
+    [SerializeField]
+    private Vector2 kittenHouseDrawOffset = new Vector2(0, -.5F);	    // Location to draw workshop sprite relative to game coordinates
 
     [SerializeField]
 	public Vector2 giftSpawnLocation = new Vector2(0, 50);	    // Location to spawn gifts. Beyond the edge of the map, preferably
@@ -63,26 +78,93 @@ public class Spawner : MonoBehaviour
 
 	void Start()
 	{
-		// Add initial blocks, hardcoded, to the GameGrid
-		Vector2[] init = new Vector2[]{
+        if(FileSerializer.fileData != null)
+        {
+            Debug.Log("Beginning loading game world from file data.");
+            SpawnFromSaveData();
+        }
+        else
+        {
+            SpawnFromDefault();
+        }
+
+        EventManager.Values.OnLifetimeFlowersCollectedChanged += OnLifetimeFlowersCollectedChanged;
+	}
+
+
+    private void SpawnFromSaveData()
+    {
+        foreach (FileData.FileGridEntityData data in FileSerializer.fileData.gameEntities)
+        {
+            GridEntity newEntity = null;
+
+            switch (data.entityType)
+            {
+                case GridEntityType.DIRT:
+                    newEntity = SpawnDirtBlock(new GameGridCoords(data.posX, data.posY));
+                    break;
+                case GridEntityType.FLOWER:
+                    newEntity = SpawnFlower(new GameGridCoords(data.posX, data.posY));
+                    break;
+                case GridEntityType.KITTEN:
+                    newEntity = SpawnKitten(new GameGridCoords(data.posX, data.posY));
+                    break;
+                case GridEntityType.UPGRADER:
+                    newEntity = SpawnUpgrader(new GameGridCoords(data.posX, data.posY));
+                    break;
+                case GridEntityType.VASE:
+                    newEntity = SpawnVase(new GameGridCoords(data.posX, data.posY));
+                    break;
+                case GridEntityType.TREE:
+                    newEntity = SpawnSapling(new GameGridCoords(data.posX, data.posY));
+                    break;
+                case GridEntityType.WOOD:
+                    newEntity = SpawnWoodPlatform(new GameGridCoords(data.posX, data.posY));
+                    break;
+                case GridEntityType.WORKSHOP:
+                    newEntity = SpawnWorkshop(new GameGridCoords(data.posX, data.posY));
+                    break;
+                case GridEntityType.KITTENHOUSE:
+                    newEntity = SpawnKittenHouse(new GameGridCoords(data.posX, data.posY));
+                    break;
+                default:
+                    Debug.LogError("GridEntityType not found in SpawnFromSaveData function.");
+                    break;
+            }
+
+            if(newEntity != null)
+            {
+                newEntity.LoadExtraSaveData(data.extraData);
+            }
+            else
+            {
+                Debug.LogError("Entity reference not found in SpawnFromSaveData function.");
+            }
+        }
+    }
+
+
+    private void SpawnFromDefault()
+    {
+        Debug.Log("No file data found. Spawning default game objects from Spawner.Start().");
+        // Add initial blocks, hardcoded, to the GameGrid
+        Vector2[] init = new Vector2[]{
 			new Vector2(-4,0),
 			new Vector2(-2,0),
 			new Vector2(0,0),
 			new Vector2(2,0),
 			new Vector2(4,0)};
 
-        for(int index = 0; index < init.Length; index++)
+        for (int index = 0; index < init.Length; index++)
         {
             GameObject newGrass = (GameObject)Instantiate(spawnStarterGrass, init[index], Quaternion.identity);
             DirtEntity newGrassEntity = newGrass.GetComponent<DirtEntity>();
             GameGridCoords newCoords = new GameGridCoords(init[index]);
             newGrassEntity.SetGridPosition(newCoords);
-            GameGrid.Instance.AddObject(newGrassEntity, newCoords);
+            GameGrid.Instance.AddEntity(newGrassEntity, newCoords);
             newGrass.transform.parent = platformsParentTransform;
         }
-
-        EventManager.Values.OnLifetimeFlowersCollectedChanged += OnLifetimeFlowersCollectedChanged;
-	}
+    }
 
 
     private void OnLifetimeFlowersCollectedChanged(int oldVal, int newVal)
@@ -94,68 +176,141 @@ public class Spawner : MonoBehaviour
             GameData.Instance.upgraderHasSpawned = true;
         }
 
-        //    if (GameData.Instance.LifetimeFlowersCollected >= 100 && !GameData.Instance.vaseHasSpawned)
-        //    {
-        //        Debug.Log("Spawn a vase at 100.");
-        //        //SpawnGiftSpecial("vase");
-        //        GameData.Instance.vaseHasSpawned = true;
-        //    }
+        if (GameData.Instance.LifetimeFlowersCollected >= 1000 && !GameData.Instance.workshopHasSpawned)
+        {
+            Debug.Log("Spawn a workshop at 1000 lifetime flowers.");
+            SpawnGiftWithContents(GiftEntity.Contents.WORKSHOP, true);
+            GameData.Instance.workshopHasSpawned = true;
+        }
     }
 
+    #region Entity spawning
 
-	public void SpawnFlower(GameGridCoords coords)
+    /// <summary>
+    /// Each of the following functions creates a new Gameobject of its Inspector-set type.
+    /// Then, it will give a reference to the entity GameComponent attached for additional initialization.
+    /// </summary>
+
+    public GridEntity SpawnFlower(GameGridCoords coords)
 	{
 		Vector2 worldSpaceSpawn = coords.ToWorldSpace() + flowerDrawOffset;
 		GameObject newFlower = (GameObject)Instantiate (spawnFlower, worldSpaceSpawn, Quaternion.identity);
         FlowerEntity newFlowerEntity = newFlower.GetComponent<FlowerEntity>();
         newFlowerEntity.SetGridPosition(coords);
-		GameGrid.Instance.AddObject (newFlowerEntity, coords);
+		GameGrid.Instance.AddEntity (newFlowerEntity, coords);
 		newFlower.transform.parent = entitiesParentTransform;
+        return newFlowerEntity;
 	}
 
 
-    public void SpawnDirtBlock(GameGridCoords coords)
+    public GridEntity SpawnDirtBlock(GameGridCoords coords)
 	{
 		GameObject newDirt = (GameObject)Instantiate(spawnDirt, coords.ToWorldSpace(), Quaternion.identity);
         DirtEntity newDirtEntity = newDirt.GetComponent<DirtEntity>();
         newDirtEntity.SetGridPosition(coords);
-		GameGrid.Instance.AddObject(newDirtEntity, coords);
+		GameGrid.Instance.AddEntity(newDirtEntity, coords);
 		newDirt.transform.parent = platformsParentTransform;
+        return newDirtEntity;
 	}
 
 
-    public void SpawnVase(GameGridCoords coords)
+    public GridEntity SpawnVase(GameGridCoords coords)
 	{
 		Vector2 worldSpaceSpawn = coords.ToWorldSpace() + vaseDrawOffset;
 		GameObject newVase = (GameObject)Instantiate (spawnVase, worldSpaceSpawn, Quaternion.identity);
         VaseEntity newVaseEntity = newVase.GetComponent<VaseEntity>();
         newVaseEntity.SetGridPosition(coords);
-		GameGrid.Instance.AddObject (newVaseEntity, coords);
+		GameGrid.Instance.AddEntity (newVaseEntity, coords);
         newVase.transform.parent = entitiesParentTransform;
+        return newVaseEntity;
 	}
 
 
-    public void SpawnKitten(GameGridCoords coords)
+    public GridEntity SpawnKitten(GameGridCoords coords)
 	{
 		Vector2 worldSpaceSpawn = coords.ToWorldSpace() + kittenDrawOffset;
 		GameObject newKitten = (GameObject)Instantiate (spawnKitten, worldSpaceSpawn, Quaternion.identity);
         KittenEntity newKittenEntity = newKitten.GetComponent<KittenEntity>();
         newKittenEntity.SetGridPosition(coords);
-		GameGrid.Instance.AddObject (newKittenEntity, coords);
+		GameGrid.Instance.AddEntity (newKittenEntity, coords);
         newKitten.transform.parent = entitiesParentTransform;
+        return newKittenEntity;
 	}
 
 
-    public void SpawnUpgrader(GameGridCoords coords)
-	{
-		Vector2 worldSpaceSpawn = coords.ToWorldSpace() + upgraderDrawOffset;
+    public GridEntity SpawnUpgrader(GameGridCoords coords)
+    {
+        Vector2 worldSpaceSpawn = coords.ToWorldSpace() + upgraderDrawOffset;
         GameObject newUpgrader = (GameObject)Instantiate(spawnUpgrader, worldSpaceSpawn, Quaternion.identity);
         UpgraderEntity newUpgraderEntity = newUpgrader.GetComponent<UpgraderEntity>();
         newUpgraderEntity.SetGridPosition(coords);
-		GameGrid.Instance.AddObject (newUpgraderEntity, coords);
+        GameGrid.Instance.AddEntity(newUpgraderEntity, coords);
         newUpgrader.transform.parent = entitiesParentTransform;
-	}
+        return newUpgraderEntity;
+    }
 
+
+    public GridEntity SpawnSapling(GameGridCoords coords)
+    {
+        Vector2 worldSpaceSpawn = coords.ToWorldSpace() + treeDrawOffset;
+        GameObject newTree = (GameObject)Instantiate(spawnTree, worldSpaceSpawn, Quaternion.identity);
+        TreeEntity newTreeEntity= newTree.GetComponent<TreeEntity>();
+        newTreeEntity.SetGridPosition(coords);
+        GameGrid.Instance.AddEntity(newTreeEntity, coords);
+        newTree.transform.parent = entitiesParentTransform;
+        return newTreeEntity;
+    }
+
+
+    public WoodPlatformEntity SpawnWoodPlatform(GameGridCoords coords)
+    {
+        GameObject newWoodPlatform = (GameObject)Instantiate(spawnWoodPlatform, coords.ToWorldSpace(), Quaternion.identity);
+        WoodPlatformEntity newWoodPlatformEntity = newWoodPlatform.GetComponent<WoodPlatformEntity>();
+        newWoodPlatformEntity.SetGridPosition(coords);
+        GameGrid.Instance.AddEntity(newWoodPlatformEntity, coords);
+        newWoodPlatform.transform.parent = platformsParentTransform;
+        return newWoodPlatformEntity;
+    }
+
+
+    public WorkshopEntity SpawnWorkshop(GameGridCoords coords)
+    {
+        Vector2 worldSpaceSpawn = coords.ToWorldSpace() + workshopDrawOffset;
+        GameObject newWorkshop = (GameObject)Instantiate(spawnWorkshop, worldSpaceSpawn, Quaternion.identity);
+        WorkshopEntity newWorkshopEntity = newWorkshop.GetComponent<WorkshopEntity>();
+        newWorkshopEntity.SetGridPosition(coords);
+        GameGrid.Instance.AddEntity(newWorkshopEntity, coords);
+        newWorkshop.transform.parent = entitiesParentTransform;
+        return newWorkshopEntity;
+    }
+
+
+    public KittenHouseEntity SpawnKittenHouse(GameGridCoords coords)
+    {
+        Vector2 worldSpaceSpawn = coords.ToWorldSpace() + kittenHouseDrawOffset;
+        GameObject newKittenHouse = (GameObject)Instantiate(spawnKittenHouse, worldSpaceSpawn, Quaternion.identity);
+        KittenHouseEntity newKittenHouseEntity = newKittenHouse.GetComponent<KittenHouseEntity>();
+        newKittenHouseEntity.SetGridPosition(coords);
+        GameGrid.Instance.AddEntity(newKittenHouseEntity, coords);
+        newKittenHouse.transform.parent = entitiesParentTransform;
+        return newKittenHouseEntity;
+    }
+
+
+    public FillerEntity SpawnFiller(GameGridCoords coords)
+    {
+        GameObject newFiller = (GameObject)Instantiate(spawnFiller, coords.ToWorldSpace(), Quaternion.identity);
+        FillerEntity newFillerEntity = newFiller.GetComponent<FillerEntity>();
+        newFillerEntity.SetGridPosition(coords);
+        GameGrid.Instance.AddEntity(newFillerEntity, coords);
+        newFiller.transform.parent = entitiesParentTransform;
+        return newFillerEntity;
+    }
+
+
+    #endregion
+
+    #region Gift spawning
 
     public void SpawnBalloon(BalloonEntity.RequestType request)
     {
@@ -175,11 +330,13 @@ public class Spawner : MonoBehaviour
         gift.transform.parent = entitiesParentTransform;
     }
 
+    #endregion
+
 
     public void RemoveObject(GridEntity entity)
     {
-        // Remove coordinates from GameGrid
-        GameGrid.Instance.RemoveAtCoordinates(entity.gridPosition);
+        // Remove entity from GameGrid
+        GameGrid.Instance.RemoveEntity(entity);
 
         // Destroy the object at the end
         Destroy(entity.gameObject);

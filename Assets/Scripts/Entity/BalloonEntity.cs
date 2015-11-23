@@ -18,6 +18,7 @@ public class BalloonEntity : MonoBehaviour
     {
         DIRT,
         KITTEN,
+        SAPLING,
         SOMETHINGELSE
     }
 
@@ -49,6 +50,9 @@ public class BalloonEntity : MonoBehaviour
                 break;
             case RequestType.KITTEN:
                 Spawner.Instance.SpawnGiftWithContents(GiftEntity.Contents.KITTEN, false);
+                break;
+            case RequestType.SAPLING:
+                Spawner.Instance.SpawnGiftWithContents(GiftEntity.Contents.SAPLING, false);
                 break;
             default:
                 break;

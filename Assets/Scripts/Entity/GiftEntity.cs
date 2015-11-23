@@ -23,6 +23,8 @@ public class GiftEntity : MonoBehaviour
         DIRT,
         KITTEN,
         UPGRADER,
+        SAPLING,
+        WORKSHOP,
         SOMETHINGELSE
     }
 
@@ -63,6 +65,12 @@ public class GiftEntity : MonoBehaviour
                     break;
                 case Contents.UPGRADER:
                     GameData.Instance.UpgradersCollected++;
+                    break;
+                case Contents.SAPLING:
+                    GameData.Instance.SaplingsCollected++;
+                    break;
+                case Contents.WORKSHOP:
+                    GameData.Instance.WorkshopsCollected++;
                     break;
                 case Contents.SOMETHINGELSE:
                     break;

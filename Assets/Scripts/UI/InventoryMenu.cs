@@ -6,7 +6,7 @@ using System.Collections;
 public class InventoryMenu : MonoBehaviour 
 {    
     [SerializeField]
-    private EntityType[] selectableEntities;
+    private ItemEntityType[] selectableEntities;
     [SerializeField]
     private Sprite[] entityImages;
 
@@ -19,8 +19,9 @@ public class InventoryMenu : MonoBehaviour
     [SerializeField]
     private Image nextImage;
 
+    private bool[] isNonzeroQuantity;
     private int currentIndex;
-
+    
 
 	void Awake() 
 	{
@@ -28,25 +29,33 @@ public class InventoryMenu : MonoBehaviour
         {
             Debug.LogError("SelectableEntities array and EntityImages array are not the same size!");
         }
-	}
-	
 
-	void OnEnable()
-	{
+        isNonzeroQuantity = new bool[selectableEntities.Length];
+
         EventManager.Game.OnStateSet += OnStateSet;
-        EventManager.Game.OnItemSelected += OnItemSelected;
+        EventManager.Game.OnInventoryItemSelected += OnInventoryItemSelected;
+        EventManager.Game.OnItemUsed += OnItemUsed;
+        EventManager.Values.OnFlowersCollectedChanged += OnItemCollected;
+        EventManager.Values.OnDirtCollectedChanged += OnItemCollected;
+        EventManager.Values.OnKittensCollectedChanged += OnItemCollected;
+        EventManager.Values.OnVasesCollectedChanged += OnItemCollected;
+        EventManager.Values.OnUpgradersCollectedChanged += OnItemCollected;
+        EventManager.Values.OnSaplingsCollectedChanged += OnItemCollected;
+        EventManager.Values.OnWoodCollectedChanged += OnItemCollected;
+        EventManager.Values.OnWorkshopsCollectedChanged += OnItemCollected;
+        EventManager.Values.OnKittenHousesCollectedChanged += OnItemCollected;
 	}
-
 	
-	void OnDisable()
+
+    void Start()
     {
-        EventManager.Game.OnStateSet -= OnStateSet;
-        EventManager.Game.OnItemSelected -= OnItemSelected;
-	}
+        UpdateNonzeroItemList();
+        EventManager.Game.OnInventoryItemHighlightChanged(selectableEntities[currentIndex]);
+    }
 
 
     // Takes in controller input 
-    // Calls MoveSelectionNext, MoveSelectionPrevious and 
+    // Calls MoveSelectionNext, MoveSelectionPrevious and ConfirmSelection
     void Update()
     {
         if (GameState.IsCurrentState(GameState.State.INVENTORY))
@@ -69,46 +78,23 @@ public class InventoryMenu : MonoBehaviour
 
     void MoveSelectionPrev()
     {
-        // Decrement currentIndex and wrap around if out of bounds
-        currentIndex--;
-        if(currentIndex < 0)
-        {
-            currentIndex = selectableEntities.Length - 1;
-        }
+        currentIndex = FindValidPrevIndex();
         UpdateSelectorImages();
+        EventManager.Game.OnInventoryItemHighlightChanged(selectableEntities[currentIndex]);
     }
 
 
 	void MoveSelectionNext()
     {
-        // Increment currentIndex and wrap around if out of bounds
-        currentIndex++;
-        if (currentIndex >= selectableEntities.Length)
-        {
-            currentIndex = 0;
-        }
+        currentIndex = FindValidNextIndex();
         UpdateSelectorImages();
+        EventManager.Game.OnInventoryItemHighlightChanged(selectableEntities[currentIndex]);
     }
 
 
     void ConfirmSelection()
     {
-        EventManager.Game.OnItemSelected(selectableEntities[currentIndex]);
-    }
-
-
-    void OnStateSet(GameState.State state)
-    {
-        if(state == GameState.State.INVENTORY)
-        {
-            selectionPanel.SetActive(true);
-            currentIndex = Array.IndexOf<EntityType>(selectableEntities, GameData.Instance.currentItem);
-            UpdateSelectorImages();
-        }
-        else if(state == GameState.State.MOVE)
-        {
-            selectionPanel.SetActive(false);
-        }
+        EventManager.Game.OnInventoryItemSelected(selectableEntities[currentIndex]);
     }
 
 
@@ -116,33 +102,257 @@ public class InventoryMenu : MonoBehaviour
     void UpdateSelectorImages()
     {
         // Set updated images to current, previous, next entity icons
-        currentImage.sprite = entityImages[currentIndex];
-        if(currentIndex <= 0)
-        {
-            previousImage.sprite = entityImages[selectableEntities.Length - 1];
-        }
-        else
-        {
-            previousImage.sprite = entityImages[currentIndex - 1];
+        currentImage.sprite = entityImages[currentIndex];        
+        previousImage.sprite = entityImages[FindValidPrevIndex()];
+        nextImage.sprite = entityImages[FindValidNextIndex()];
+    }
+
+    
+    /// <summary>
+    /// Updates the valid selection bool array to the newest inventory information. 
+    /// Also performs reassignment of selected item to next valid item, if current selection becomes invalid.
+    /// </summary>
+    void UpdateNonzeroItemList()
+    {
+        for(int index = 0; index < selectableEntities.Length; index++)
+        {            
+            switch(selectableEntities[index])
+            {
+                case ItemEntityType.BALLOON:
+                    isNonzeroQuantity[index] = true;
+                    break;
+
+                case ItemEntityType.FLOWER:
+                    isNonzeroQuantity[index] = true;
+                    break;
+
+                case ItemEntityType.DIRT:
+                    if(GameData.Instance.DirtCollected > 0)
+                    {
+                        isNonzeroQuantity[index] = true;
+                    }
+                    else
+                    {
+                        isNonzeroQuantity[index] = false;
+                        if (currentIndex == index)
+                        {
+                            SelectNextValidItem();
+                        }
+                    }
+                    break;
+
+                case ItemEntityType.SHOVEL:
+                    if (GameData.Instance.IsShovelUnlocked)
+                    {
+                        isNonzeroQuantity[index] = true;
+                    }
+                    else
+                    {
+                        isNonzeroQuantity[index] = false;
+                    }
+                    break;
+
+                case ItemEntityType.KITTEN:
+                    if (GameData.Instance.KittensCollected > 0)
+                    {
+                        isNonzeroQuantity[index] = true;
+                    }
+                    else
+                    {
+                        isNonzeroQuantity[index] = false;
+                        if (currentIndex == index)
+                        {
+                            SelectNextValidItem();
+                        }
+                    }
+                    break;
+
+                case ItemEntityType.UPGRADER:
+                    if (GameData.Instance.UpgradersCollected > 0)
+                    {
+                        isNonzeroQuantity[index] = true;
+                    }
+                    else
+                    {
+                        isNonzeroQuantity[index] = false;
+                        if (currentIndex == index)
+                        {
+                            SelectNextValidItem();
+                        }
+                    }
+                    break;
+
+                case ItemEntityType.SAPLING:
+                    if (GameData.Instance.SaplingsCollected > 0)
+                    {
+                        isNonzeroQuantity[index] = true;
+                    }
+                    else
+                    {
+                        isNonzeroQuantity[index] = false;
+                        if (currentIndex == index)
+                        {
+                            SelectNextValidItem();
+                        }
+                    }
+                    break;
+
+                case ItemEntityType.WOOD:
+                    if (GameData.Instance.WoodCollected > 0)
+                    {
+                        isNonzeroQuantity[index] = true;
+                    }
+                    else
+                    {
+                        isNonzeroQuantity[index] = false;
+                        if (currentIndex == index)
+                        {
+                            SelectNextValidItem();
+                        }
+                    }
+                    break;
+
+                case ItemEntityType.WORKSHOP:
+                    if (GameData.Instance.WorkshopsCollected > 0)
+                    {
+                        isNonzeroQuantity[index] = true;
+                    }
+                    else
+                    {
+                        isNonzeroQuantity[index] = false;
+                        if (currentIndex == index)
+                        {
+                            SelectNextValidItem();
+                        }
+                    }
+                    break;
+
+                case ItemEntityType.KITTENHOUSE:
+                    if (GameData.Instance.KittenHousesCollected > 0)
+                    {
+                        isNonzeroQuantity[index] = true;
+                    }
+                    else
+                    {
+                        isNonzeroQuantity[index] = false;
+                        if (currentIndex == index)
+                        {
+                            SelectNextValidItem();
+                        }
+                    }
+                    break;
+
+                case ItemEntityType.VASE:
+                    break;
+
+                default:
+                    Debug.LogError("EntityType not implemented in InventoryMenu.UpdateNonzeroItemList().");
+                    break;
+            }
         }
 
-        if(currentIndex + 1 >= selectableEntities.Length)
+        UpdateSelectorImages();
+    }
+
+
+    /// <summary>
+    /// Selects the next valid item in inventory.
+    /// For use when current inventory item is depleted.
+    /// </summary>
+    void SelectNextValidItem()
+    {
+        currentIndex = FindValidNextIndex();
+        EventManager.Game.OnInventoryItemHighlightChanged(selectableEntities[currentIndex]);
+        ConfirmSelection();
+    }
+
+    
+    /// <summary>
+    /// Finds and returns the index of the next valid nonzero item in inventory.
+    /// Will return current index as the next valid if it loops around once.
+    /// </summary>
+    int FindValidNextIndex()
+    {
+        int iteratorIndex = currentIndex + 1;
+        while(iteratorIndex != currentIndex)
         {
-            nextImage.sprite = entityImages[0];
+            if(iteratorIndex >= selectableEntities.Length)
+            {
+                iteratorIndex = 0;
+            }
+
+            if(isNonzeroQuantity[iteratorIndex])
+            {
+                break;
+            }
+
+            iteratorIndex++;
         }
-        else
+        return iteratorIndex;
+    }
+
+
+    /// <summary>
+    /// Finds and returns the index of the previous valid nonzero item in inventory.
+    /// Will return current index as the previous valid if it loops around once.
+    /// </summary>
+    int FindValidPrevIndex()
+    {
+        int iteratorIndex = currentIndex - 1;
+        while (iteratorIndex != currentIndex)
         {
-            nextImage.sprite = entityImages[currentIndex + 1];
+            if (iteratorIndex < 0)
+            {
+                iteratorIndex = selectableEntities.Length - 1;
+            }
+
+            if (isNonzeroQuantity[iteratorIndex])
+            {
+                break;
+            }
+
+            iteratorIndex--;
+        }
+        return iteratorIndex;
+    }
+
+
+    void OnStateSet(GameState.State state)
+    {
+        if (state == GameState.State.INVENTORY)
+        {
+            selectionPanel.SetActive(true);
+            currentIndex = Array.IndexOf<ItemEntityType>(selectableEntities, GameData.Instance.currentItem);
+            UpdateSelectorImages();
+        }
+        else if (state == GameState.State.MOVE)
+        {
+            selectionPanel.SetActive(false);
         }
     }
 
 
     // Selects and saves an item selection, and returns to Move mode.
-	void OnItemSelected(EntityType itemType) 
+	void OnInventoryItemSelected(ItemEntityType itemType) 
 	{
-        GameData.Instance.currentItem = itemType;
         EventManager.Game.OnStateSet(GameState.State.MOVE);
 	}
+
+
+    void OnItemUsed(ItemEntityType itemType)
+    {
+        // For efficiency's sake, remove items which are not placeables
+        if(itemType != ItemEntityType.FLOWER || itemType != ItemEntityType.SHOVEL)
+        {
+            UpdateNonzeroItemList();
+        }
+    }
+
+
+    void OnItemCollected(int unused1, int unused2)
+    {
+        UpdateNonzeroItemList();
+    }
 
 
     public void OnButtonLeftPressed()
@@ -165,7 +375,13 @@ public class InventoryMenu : MonoBehaviour
     
     public Sprite GetImageForCurrentItem()
     {
-        int index = Array.IndexOf<EntityType>(selectableEntities, GameData.Instance.currentItem);
+        int index = Array.IndexOf<ItemEntityType>(selectableEntities, GameData.Instance.currentItem);
         return entityImages[index];
+    }
+
+
+    public ItemEntityType GetCurrentHighlightedItem()
+    {
+        return selectableEntities[currentIndex];
     }
 }

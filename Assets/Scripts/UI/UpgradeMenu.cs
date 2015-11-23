@@ -10,13 +10,13 @@ public class UpgradeMenu : MonoBehaviour
     private GameObject upgradeUIPanel;
     [SerializeField]
     private GameObject firstButton;
+    
 
     void Awake()
     {
         EventManager.Game.OnStateSet += OnStateSet;
-
-        upgradeUIPanel.SetActive(false);
     }
+    
 
     void OnStateSet(GameState.State state)
     {
@@ -33,6 +33,7 @@ public class UpgradeMenu : MonoBehaviour
             upgradeUIPanel.SetActive(false);
         }
     }
+
 
     // For use with UpgradeMenu button
     public void UpgradeFlowerValue()

@@ -13,9 +13,7 @@ public class BalloonMenu : MonoBehaviour
 
 	void Awake() 
 	{
-        EventManager.Game.OnStateSet += OnStateSet;
-        
-        balloonUIPanel.SetActive(false);
+        EventManager.Game.OnStateSet += OnStateSet;        
 	}
 	
 	void OnStateSet(GameState.State state)
@@ -62,9 +60,15 @@ public class BalloonMenu : MonoBehaviour
 
 
     // For use with BalloonMenu button
-    public void SpawnUnimplemented()
+    public void SpawnSaplingBalloon()
     {
-        Debug.LogError("That hasn't been implemented yet!");
+        if (GameData.Instance.FlowersCollected >= GameData.Instance.FlowersRequiredForSapling)
+        {
+            ObjectReferences.spawner.SpawnBalloon(BalloonEntity.RequestType.SAPLING);
+            GameData.Instance.PaySaplingCost();
+
+            EventManager.Game.OnStateSet(GameState.State.MOVE);
+        }
     }
 
 

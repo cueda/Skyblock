@@ -8,4 +8,11 @@ public class UpgraderEntity : GridEntity
 	{
         EventManager.Game.OnStateSet(GameState.State.UPGRADE);
 	}
+
+
+    // Returns this object's GridEntityType.
+    public override GridEntityType GetGridEntityType()
+    {
+        return GridEntityType.UPGRADER;
+    }
 }

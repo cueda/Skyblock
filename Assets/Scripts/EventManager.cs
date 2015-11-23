@@ -31,12 +31,13 @@ public class EventManager : MonoBehaviour
     public static class Game
     {
         public static Action<GameState.State> OnStateSet = delegate { };
-        public static Action<EntityType> OnItemSelected = delegate { };
+        public static Action<ItemEntityType> OnInventoryItemSelected = delegate { };
+        public static Action<ItemEntityType> OnInventoryItemHighlightChanged = delegate { };
+        public static Action<ItemEntityType> OnItemUsed = delegate { };
     }
 
     public static class Player
     {
-
     }
 
     public static class Values
@@ -47,9 +48,14 @@ public class EventManager : MonoBehaviour
         public static Action<int, int> OnKittensCollectedChanged = delegate { };
         public static Action<int, int> OnVasesCollectedChanged = delegate { };
         public static Action<int, int> OnUpgradersCollectedChanged = delegate { };
+        public static Action<int, int> OnSaplingsCollectedChanged = delegate { };
+        public static Action<int, int> OnWoodCollectedChanged = delegate { };
+        public static Action<int, int> OnWorkshopsCollectedChanged = delegate { };
+        public static Action<int, int> OnKittenHousesCollectedChanged = delegate { };
 
         public static Action<int, int> OnDirtCostChanged = delegate { };
         public static Action<int, int> OnKittenCostChanged = delegate { };
+        public static Action<int, int> OnSaplingCostChanged = delegate { };
 
         public static Action<int, int> OnFlowerValueLevelChanged = delegate { };
         public static Action<int, int> OnKittenGenerateLevelChanged = delegate { };

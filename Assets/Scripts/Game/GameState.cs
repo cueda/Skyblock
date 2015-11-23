@@ -13,6 +13,8 @@ public class GameState : MonoBehaviour
         INVENTORY,
         BALLOON,
         UPGRADE,
+        CRAFTING,
+        KITTENHOUSE,
         MENU
     }
 

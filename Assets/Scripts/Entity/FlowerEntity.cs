@@ -14,11 +14,10 @@ public class FlowerEntity : GridEntity
 	private int growthLevel;
 
 	private float growthTime;
-    private float growTick;
     private SpriteRenderer spRenderer;
 
 
-	void Start () 
+	void Awake () 
 	{
 		spRenderer = GetComponent<SpriteRenderer>();
 	}
@@ -69,5 +68,27 @@ public class FlowerEntity : GridEntity
             GameData.Instance.AddFlowers(GameData.Instance.FlowerValueLevel);
             ObjectReferences.spawner.RemoveObject(this);
         }
+    }
+
+
+    // Returns this object's GridEntityType.
+    public override GridEntityType GetGridEntityType()
+    {
+        return GridEntityType.FLOWER;
+    }
+
+
+    // Generates extra save data for FlowerEntity.
+    public override int[] GenerateExtraSaveData()
+    {
+        return new int[] { growthLevel };
+    }
+
+
+    // Reads in save data from FileSerializer's GameData instance.
+    public override void LoadExtraSaveData(int[] extraData)
+    {
+        growthLevel = extraData[0];
+        spRenderer.sprite = sprites[growthLevel];
     }
 }

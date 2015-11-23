@@ -50,6 +50,34 @@ public class GameData : MonoBehaviour
         set { int old = upgradersCollected; upgradersCollected = value; EventManager.Values.OnUpgradersCollectedChanged(old, value); }
     }
 
+    private int saplingsCollected;
+    public int SaplingsCollected
+    {
+        get { return saplingsCollected; }
+        set { int old = saplingsCollected; saplingsCollected = value; EventManager.Values.OnSaplingsCollectedChanged(old, value); }
+    }
+
+    private int woodCollected;
+    public int WoodCollected
+    {
+        get { return woodCollected; }
+        set { int old = woodCollected; woodCollected = value; EventManager.Values.OnWoodCollectedChanged(old, value); }
+    }
+
+    private int workshopsCollected;
+    public int WorkshopsCollected
+    {
+        get { return workshopsCollected; }
+        set { int old = workshopsCollected; workshopsCollected = value; EventManager.Values.OnWorkshopsCollectedChanged(old, value); }
+    }
+
+    private int kittenHousesCollected;
+    public int KittenHousesCollected
+    {
+        get { return kittenHousesCollected; }
+        set { int old = kittenHousesCollected; kittenHousesCollected = value; EventManager.Values.OnKittenHousesCollectedChanged(old, value); }
+    }
+
     #endregion
 
     #region Purchase costs
@@ -66,6 +94,19 @@ public class GameData : MonoBehaviour
     {
         get { return flowersRequiredForKitten; }
         private set { int old = flowersRequiredForKitten; flowersRequiredForKitten = value; EventManager.Values.OnKittenCostChanged(old, value); }
+    }
+
+    private int flowersRequiredForSapling;
+    public int FlowersRequiredForSapling
+    {
+        get { return flowersRequiredForSapling; }
+        private set { int old = flowersRequiredForSapling; flowersRequiredForSapling = value; EventManager.Values.OnSaplingCostChanged(old, value); }
+    }
+
+    public int WoodRequiredForKittenHouse
+    {
+        get;
+        private set;
     }
 
     #endregion
@@ -96,14 +137,26 @@ public class GameData : MonoBehaviour
     private int baseFlowersRequiredForDirt = 5;			    // Flowers required to perform a Wish at base, only used during initialization
     [SerializeField]
     private int baseFlowersRequiredForKitten = 20;		    // Flowers required to buy a Kitten at base, only used during initialization
+    [SerializeField]
+    private int baseFlowersRequiredForSapling = 200;	    // Flowers required to buy a Kitten at base, only used during initialization
+    [SerializeField]
+    private int baseWoodRequiredForKittenHouse = 100;	    // Flowers required to buy a Kitten at base, only used during initialization
     
     [HideInInspector]
-    public int kittenGenerateLevel = 1;		    		    // Upgrade: amount of flowers generated per 5 seconds by kitten
+    public int kittenGenerateLevel = 1;		    		    // Upgrade: speed at which kittens generate flowers (not used)
     
-    public bool vaseHasSpawned;						        // Check if vase has spawned, for Spawner
-    public bool upgraderHasSpawned;		    			    // Check if upgrader has spawned, for Spawner
+    public bool vaseHasSpawned;						        // Value for Spawner to determine new vase spawn
+    public bool upgraderHasSpawned;		    			    // Value for Spawner to determine new upgrader spawn
+    public bool workshopHasSpawned;                         // Value for Spawner to determine new workshop spawn
 
-    public EntityType currentItem = EntityType.FLOWER1;     // Currently selected item
+    private bool isShovelUnlocked;                          // Value for InventoryMenu to display or hide shovel, once first dirt is obtained
+    public bool IsShovelUnlocked
+    {
+        get { return isShovelUnlocked; }
+        private set { isShovelUnlocked = value; }
+    }
+
+    public ItemEntityType currentItem = ItemEntityType.FLOWER;      // Currently selected item
 
     public SoundManager soundManager;
     
@@ -121,10 +174,61 @@ public class GameData : MonoBehaviour
 		}
 		
 		Instance = this;
+
+        EventManager.Game.OnInventoryItemSelected += OnInventoryItemSelected;
+        EventManager.Values.OnDirtCollectedChanged += OnFirstDirtCollected;
 	}
 
 
     void Start()
+    {
+        /*
+         * 
+         * TODO: Load game data from deserialized fileData from save file
+         * 
+         */
+        if (FileSerializer.fileData != null)
+        {
+            Debug.Log("Beginning loading game state from file data.");
+            SpawnFromSaveData();
+        }
+        else
+        {
+            SpawnFromDefault();
+        }
+    }
+
+
+    private void SpawnFromSaveData()
+    {   
+        // Deliberately update the private values, to avoid triggering OnFlowersCollectedValueChanged
+        lifetimeFlowersCollected = FileSerializer.fileData.gameData.lifetimeFlowersCollected;
+        flowersCollected = FileSerializer.fileData.gameData.flowersCollected;
+
+        DirtCollected = FileSerializer.fileData.gameData.dirtCollected;
+        VasesCollected = FileSerializer.fileData.gameData.vasesCollected;
+        KittensCollected = FileSerializer.fileData.gameData.kittensCollected;
+        UpgradersCollected = FileSerializer.fileData.gameData.upgradersCollected;
+        SaplingsCollected = FileSerializer.fileData.gameData.saplingsCollected;
+        WoodCollected = FileSerializer.fileData.gameData.woodCollected;
+        WorkshopsCollected = FileSerializer.fileData.gameData.workshopsCollected;
+        KittenHousesCollected = FileSerializer.fileData.gameData.kittenHousesCollected;
+
+        FlowersRequiredForDirt = FileSerializer.fileData.gameData.flowersRequiredForDirt;
+        FlowersRequiredForKitten = FileSerializer.fileData.gameData.flowersRequiredForKitten;
+        FlowersRequiredForSapling = FileSerializer.fileData.gameData.flowersRequiredForSapling;
+        WoodRequiredForKittenHouse = FileSerializer.fileData.gameData.woodRequiredForKittenHouse;
+
+        FlowerValueLevel = FileSerializer.fileData.gameData.flowerValueLevel;
+        KittenStorageLevel = FileSerializer.fileData.gameData.kittenStorageLevel;
+        vaseHasSpawned = FileSerializer.fileData.gameData.vaseHasSpawned;
+        upgraderHasSpawned = FileSerializer.fileData.gameData.upgraderHasSpawned;
+        workshopHasSpawned = FileSerializer.fileData.gameData.workshopHasSpawned;
+        IsShovelUnlocked = FileSerializer.fileData.gameData.IsShovelUnlocked;
+    }
+
+
+    private void SpawnFromDefault()
     {
         // Deliberately update the private values, to avoid triggering OnFlowersCollectedValueChanged
         lifetimeFlowersCollected = 0;
@@ -134,12 +238,17 @@ public class GameData : MonoBehaviour
         VasesCollected = 0;
         KittensCollected = 0;
         UpgradersCollected = 0;
+        WoodCollected = 0;
+        WorkshopsCollected = 0;
 
         FlowersRequiredForDirt = baseFlowersRequiredForDirt;
         FlowersRequiredForKitten = baseFlowersRequiredForKitten;
+        FlowersRequiredForSapling = baseFlowersRequiredForSapling;
+        WoodRequiredForKittenHouse = baseWoodRequiredForKittenHouse;
 
         flowerValueLevel = 1;
         kittenStorageLevel = 1;
+
     }
 
     #endregion
@@ -174,13 +283,30 @@ public class GameData : MonoBehaviour
     }
 
 
+    public void AddWood(int count)
+    {
+        WoodCollected += count;
+        
+        FloatingTextManager.Instance.SpawnTextPrefab("+ " + count + " Wood");
+
+        // Play a sound when gaining flowers.
+        //soundManager.PlayRandomNote();
+    }
+
+
+    public void RemoveWood(int count)
+    {
+        FlowersCollected -= count;
+    }
+
+
     public void PayDirtCost()
     {
         RemoveFlowers(FlowersRequiredForDirt);
 
         // Wish cost goes up by an amount defined by algorithm set here
-        // Cost increases 1.5 times, rounded down.
-        FlowersRequiredForDirt += FlowersRequiredForDirt / 2;
+        // Cost increases 1.4 times, rounded down.
+        FlowersRequiredForDirt = (int)(FlowersRequiredForDirt * 1.4);
     }
 
 
@@ -189,8 +315,26 @@ public class GameData : MonoBehaviour
         RemoveFlowers(FlowersRequiredForKitten);
 
         // Kitten cost goes up by an amount defined by algorithm set here
-        // Cost increases 1.2 times, rounded down.
-        FlowersRequiredForKitten += FlowersRequiredForKitten / 5;
+        // Cost increases 1.3 times, rounded down.
+        FlowersRequiredForKitten = (int)(FlowersRequiredForKitten * 1.3);
+    }
+
+
+    public void PaySaplingCost()
+    {
+        RemoveFlowers(FlowersRequiredForSapling);
+
+        // Sapling cost goes up by an amount defined by algorithm set here
+        // Cost increases by double.
+        FlowersRequiredForSapling = FlowersRequiredForSapling * 2;
+    }
+
+
+    public void PayKittenHouseCost()
+    {
+        WoodCollected -= WoodRequiredForKittenHouse;
+        
+        // No change to cost
     }
     
 
@@ -245,8 +389,17 @@ public class GameData : MonoBehaviour
     #endregion
 
 
-    void OnItemSelected(EntityType itemType)
+    void OnInventoryItemSelected(ItemEntityType itemType)
     {
         currentItem = itemType;
+    }
+
+
+    void OnFirstDirtCollected(int unused1, int unused2)
+    {
+        if(DirtCollected > 0 && !IsShovelUnlocked)
+        {
+            IsShovelUnlocked = true;
+        }
     }
 }

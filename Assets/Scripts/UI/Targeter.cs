@@ -15,7 +15,7 @@ public class Targeter : MonoBehaviour
     {
         spRenderer = GetComponent<SpriteRenderer>();
         
-        // Enable this object only when in Target state
+        // Needs to be added to delegate, even before first enable
         EventManager.Game.OnStateSet += OnStateSet;
 
         gameObject.SetActive(false);
@@ -79,7 +79,7 @@ public class Targeter : MonoBehaviour
                 // If on invalid location (outside range), cancel targeter
                 if(touchCoordinates == null)
                 {
-                    EventManager.Game.OnStateSet(GameState.State.MOVE);
+                    StartCoroutine(EndTargetingOnceTouchReleased());
                 }
                 else
                 {
@@ -169,8 +169,11 @@ public class Targeter : MonoBehaviour
 
         switch(GameData.Instance.currentItem)
         {
-            case EntityType.DIRT:
-                if (!GameGrid.Instance.IsCoordinatesOccupied(currentGridPosition) && !GameGrid.Instance.IsCoordinatesOccupied(currentGridPosition + new GameGridCoords(0, -1)))
+            case ItemEntityType.DIRT:
+                // If space above is not occupied and the space below is not dirt
+                if (!GameGrid.Instance.IsCoordinatesOccupied(currentGridPosition) 
+                    && !currentGridPosition.Equals(playerPosition.GetPosition())
+                    && !currentGridPosition.Equals(playerPosition.GetPosition() + new GameGridCoords(0, 1)))
                 {
                     // Check for dirt in inventory.
                     if (GameData.Instance.DirtCollected > 0)
@@ -181,7 +184,8 @@ public class Targeter : MonoBehaviour
                     }
                 }
                 break;
-            case EntityType.SHOVEL:
+
+            case ItemEntityType.SHOVEL:
                 GridEntity objectAtTarget = GameGrid.Instance.GetObjectAt(currentGridPosition);
                 if (objectAtTarget != null)
                 {
@@ -199,9 +203,40 @@ public class Targeter : MonoBehaviour
                     }
                 }
                 break;
+
+            case ItemEntityType.WOOD:
+                if (!GameGrid.Instance.IsCoordinatesOccupied(currentGridPosition)
+                    && !GameGrid.Instance.IsCoordinatesOccupied(currentGridPosition + new GameGridCoords(0, -1))
+                    && !GameGrid.Instance.IsCoordinatesOccupied(currentGridPosition + new GameGridCoords(0, 1)))
+                {
+                    // Check for wood in inventory.
+                    if (GameData.Instance.WoodCollected > 0)
+                    {
+                        // Add wood platform and use one wood resource.
+                        ObjectReferences.spawner.SpawnWoodPlatform(currentGridPosition);
+                        GameData.Instance.WoodCollected--;
+                    }
+                }
+                break;
+                            
             default:
                 break;
         }
+    }
+
+
+    /// <summary>
+    /// When player touches an out-of-targeter zone, targeter will wait until all touches/click have been released.
+    /// This is in order to prevent the Inventory button to be pressed in the same frame as the targeter cancellation input.
+    /// </summary>
+    private IEnumerator EndTargetingOnceTouchReleased()
+    {
+        while(Input.touchCount > 0 || Input.GetMouseButton(0))
+        {
+            yield return null;
+        }
+
+        EventManager.Game.OnStateSet(GameState.State.MOVE);
     }
 
 

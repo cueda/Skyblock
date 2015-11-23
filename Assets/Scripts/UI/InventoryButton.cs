@@ -10,9 +10,13 @@ public class InventoryButton : MonoBehaviour
     [SerializeField]
     private Image spriteCurrent;
 
+    private Button button;
+
     
     void Awake()
     {
+        button = GetComponent<Button>();
+
         EventManager.Game.OnStateSet += OnStateSet;
     }
 
@@ -20,14 +24,14 @@ public class InventoryButton : MonoBehaviour
     void OnEnable()
     {
         // Ignore the EntityType.DIRT - it's unused and serves as a placeholder
-        OnItemSelected(EntityType.DIRT);
-        EventManager.Game.OnItemSelected += OnItemSelected;
+        OnInventoryItemSelected(ItemEntityType.DIRT);
+        EventManager.Game.OnInventoryItemSelected += OnInventoryItemSelected;
     }
 
 
     void OnDisable()
     {
-        EventManager.Game.OnItemSelected -= OnItemSelected;
+        EventManager.Game.OnInventoryItemSelected -= OnInventoryItemSelected;
     }
 
 
@@ -55,7 +59,7 @@ public class InventoryButton : MonoBehaviour
     }
 
 
-    void OnItemSelected(EntityType unused)
+    void OnInventoryItemSelected(ItemEntityType unused)
     {
         StartCoroutine(WaitFrameAndUpdateSprite());
     }
@@ -65,11 +69,13 @@ public class InventoryButton : MonoBehaviour
     {
         if(state == GameState.State.MOVE || state == GameState.State.INVENTORY)
         {
-            gameObject.SetActive(true);
+            button.interactable = true;
+            spriteCurrent.color = button.colors.normalColor;
         }
         else
         {
-            gameObject.SetActive(false);
+            button.interactable = false;
+            spriteCurrent.color = button.colors.disabledColor;
         }
     }
 

@@ -4,26 +4,25 @@ using System.Collections;
 
 public class KittenEntity : GridEntity 
 {
-    [SerializeField]
     private float flowerGenerationRate = 5;
-    [SerializeField]
     private int maxFlowersStorable = 5;
 	
-    private ParticleSystem particleSystem;
+    private ParticleSystem flowerParticles;
     private int flowersStored;
 
 
     void Awake () 
     {
-        particleSystem = GetComponentInChildren<ParticleSystem>();
+        flowerParticles = GetComponentInChildren<ParticleSystem>();
         EventManager.Values.OnKittenGenerateLevelChanged += OnKittenGenerateLevelChanged;
-        EventManager.Values.OnKittenStorageLevelChanged += OnKittenStorageLevelChanged;
+        EventManager.Values.OnKittenStorageLevelChanged += UpdateKittenStorageLevel;
     }
 
 
     void OnEnable()
     {
         flowersStored = 0;
+        UpdateKittenStorageLevel(0, 0);
         StartCoroutine(GenerateFlowers());
     }
 
@@ -48,15 +47,15 @@ public class KittenEntity : GridEntity
             {
                 flowersStored = maxFlowersStorable;
                 // Effect to indicate kitten has maximum flowers stored
-                particleSystem.Play();
+                flowerParticles.Play();
             }
         }        
     }
 
 
-    private void OnKittenStorageLevelChanged(int unused1, int unused2)
+    private void UpdateKittenStorageLevel(int unused1, int unused2)
     {
-        maxFlowersStorable = 5 + (2 * (GameData.Instance.KittenStorageLevel - 1));
+        maxFlowersStorable = 5 + (3 * (GameData.Instance.KittenStorageLevel - 1));
     }
 
 
@@ -74,5 +73,26 @@ public class KittenEntity : GridEntity
     {
         GameData.Instance.AddFlowers(flowersStored);
         flowersStored = 0;
+    }
+
+
+    // Returns this object's GridEntityType.
+    public override GridEntityType GetGridEntityType()
+    {
+        return GridEntityType.KITTEN;
+    }
+
+
+    // Generates extra save data for KittenEntity.
+    public override int[] GenerateExtraSaveData()
+    {
+        return new int[] { flowersStored };
+    }
+
+
+    // Reads in save data from FileSerializer's GameData instance.
+    public override void LoadExtraSaveData(int[] extraData)
+    {
+        flowersStored = extraData[0];
     }
 }

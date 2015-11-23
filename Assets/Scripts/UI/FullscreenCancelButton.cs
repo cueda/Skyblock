@@ -9,11 +9,17 @@ using System.Collections;
 public class FullscreenCancelButton : MonoBehaviour 
 {
     [SerializeField]
+    private GameObject targeterObject;
+    [SerializeField]
     private InventoryMenu inventoryMenu;
     [SerializeField]
     private BalloonMenu balloonMenu;
     [SerializeField]
     private UpgradeMenu upgradeMenu;
+    [SerializeField]
+    private CraftingMenu craftingMenu;
+    [SerializeField]
+    private KittenHouseMenu kittenHouseMenu;
 
 
 	void Awake() 
@@ -23,12 +29,15 @@ public class FullscreenCancelButton : MonoBehaviour
 	}
 
 	
-    // Tentatively, sets this button as active in all cases except Move
+    // Tentatively, sets this button as active in all cases except Move and Target
 	void OnStateSet(GameState.State state) 
 	{
         switch (state)
         {
             case GameState.State.MOVE:
+                gameObject.SetActive(false);
+                break;
+            case GameState.State.TARGET:
                 gameObject.SetActive(false);
                 break;
             default:
@@ -47,6 +56,14 @@ public class FullscreenCancelButton : MonoBehaviour
         else if(GameState.IsCurrentState(GameState.State.UPGRADE))
         {
             upgradeMenu.CloseUpgradeMenu();
+        }
+        else if (GameState.IsCurrentState(GameState.State.CRAFTING))
+        {
+            craftingMenu.CloseCraftingMenu();
+        }
+        else if (GameState.IsCurrentState(GameState.State.KITTENHOUSE))
+        {
+            kittenHouseMenu.CloseKittenHouseMenu();
         }
         else if(GameState.IsCurrentState(GameState.State.INVENTORY))
         {
