@@ -83,6 +83,7 @@
     <Compile Include="Assets\Scripts\Input\AgnosticInputHandler.cs" />
     <Compile Include="Assets\Scripts\Input\ControllerInputHandler.cs" />
     <Compile Include="Assets\Scripts\Input\TouchScreenInputHandler.cs" />
+    <Compile Include="Assets\Scripts\MusicPitchChanger.cs" />
     <Compile Include="Assets\Scripts\ObjectReferences.cs" />
     <Compile Include="Assets\Scripts\Player\CharacterController2D.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerAction.cs" />
